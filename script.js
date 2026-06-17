@@ -48,7 +48,7 @@ let localFileCount = 0;
 
 async function checkLocalFiles() {
     try {
-        const res = await fetch('http://localhost:3000/api/files');
+        const res = await fetch('/api/files');
         const data = await res.json();
         hasLocalFiles = data.success && data.files && data.files.length > 0;
         localFileCount = data.success && data.files ? data.files.length : 0;
@@ -1129,12 +1129,12 @@ if (searchBtn) {
 
             try {
                 const [localRes, brixRes] = await Promise.allSettled([
-                    fetch('http://localhost:3000/api/search-local', {
+                    fetch('/api/search-local', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ fieldTerms })
                     }),
-                    fetch('http://localhost:3000/api/search-brixhub', {
+                    fetch('/api/search-brixhub', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ fieldTerms })

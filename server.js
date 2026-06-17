@@ -7,6 +7,7 @@ const readline = require('readline');
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.static(__dirname));
 
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
 
