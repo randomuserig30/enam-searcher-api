@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <script>(function(){var t=localStorage.getItem('enam-theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light')}else if(t==='system'){if(!window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','light')}}})();</script>
+    <title>Enam Searcher - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .dash-page {
+            padding: 40px 48px;
+            max-width: 1100px;
+        }
+
+        /* Header */
+        .dash-welcome h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 6px;
+        }
+
+        .dash-welcome h1 span {
+            color: #22c55e;
+        }
+
+        .dash-welcome p {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            margin-bottom: 32px;
+        }
+
+        /* Search bar */
+        .dash-search {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 20px;
+            margin-bottom: 24px;
+        }
+
+        .dash-search i {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .dash-search input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-size: 0.92rem;
+            font-family: inherit;
+        }
+
+        .dash-search input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .dash-search-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 18px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .dash-search-btn:hover {
+            border-color: var(--border-hover);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        /* Stats row */
+        .dash-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .dash-stat {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .dash-stat-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .dash-stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .dash-stat-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Start a search */
+        .dash-section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .dash-section-header h2 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .dash-section-header span {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
+
+        .dash-indexes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 32px;
+        }
+
+        .dash-index-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .dash-index-card:hover {
+            border-color: var(--border-hover);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .dash-index-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .dash-index-card h3 {
+            font-size: 0.92rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .dash-index-card p {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+        }
+
+        /* Bottom two-column */
+        .dash-bottom {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .dash-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .dash-card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.92rem;
+            font-weight: 700;
+        }
+
+        .dash-card-body {
+            padding: 20px;
+        }
+
+        /* Recent activity empty */
+        .dash-activity-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .dash-activity-empty-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 50%;
+            margin-bottom: 16px;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .dash-activity-empty p {
+            color: var(--text-muted);
+            font-size: 0.84rem;
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+
+        .dash-activity-link {
+            color: #22c55e;
+            font-size: 0.84rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .dash-activity-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Quick start */
+        .dash-quick-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        .dash-quick-item:last-child {
+            border-bottom: none;
+        }
+
+        .dash-quick-num {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .dash-quick-text {
+            flex: 1;
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+
+        .dash-quick-right {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .dash-quick-right i {
+            font-size: 0.7rem;
+        }
+
+        .dash-quick-badge {
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: #777777;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2px 7px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .dash-page { padding: 24px 16px; }
+            .dash-stats { grid-template-columns: 1fr; }
+            .dash-indexes { grid-template-columns: 1fr 1fr; }
+            .dash-bottom { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-top">
+            <a href="index.html" class="logo sidebar-logo">
+                <i class="fas fa-bolt"></i>
+                <span>Enam<span class="logo-accent"> Searcher</span></span>
+            </a>
+            <div class="sidebar-group">
+                <div class="sidebar-label">MAIN</div>
+                <a href="dashboard.html" class="sidebar-item" style="color:var(--text-primary);background:rgba(255,255,255,0.06);">
+                    <i class="fas fa-th-large" style="color:var(--text-primary);"></i>
+                    <span>Dashboard</span>
+                </a>
+                <div class="sidebar-item has-sub open" id="searchesToggle">
+                    <i class="fas fa-search"></i>
+                    <span>Searches</span>
+                    <i class="fas fa-chevron-down sidebar-arrow"></i>
+                </div>
+                <div class="sidebar-sub open" id="searchesSub">
+                    <a href="index.html" class="sidebar-subitem">
+                        <i class="fas fa-shield-halved"></i>
+                        <span>Breach Data</span>
+                    </a>
+                    <a href="discord.html" class="sidebar-subitem">
+                        <i class="fab fa-discord"></i>
+                        <span>Discord</span>
+                    </a>
+                    <a href="fivem.html" class="sidebar-subitem">
+                        <svg class="sidebar-svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M22.4 24h-5.225c-.117 0-.455-1.127-1.026-3.375-1.982-6.909-3.124-10.946-3.417-12.12l3.37-3.325h.099c.454 1.42 2.554 7.676 6.299 18.768ZM12.342 7.084h-.048a3.382 3.385 0 0 1-.098-.492v-.098a102.619 102.715 0 0 1 3.272-3.275c.13.196.196.356.196.491v.05a140.694 140.826 0 0 1-3.322 3.324ZM5.994 10.9h-.05c.67-2.12 1.076-3.209 1.223-3.275L14.492.343c.08 0 .258.524.533 1.562zm1.37-4.014h-.05C8.813 2.342 9.612.048 9.71 0h4.495v.05a664.971 664.971 0 0 1-6.841 6.839Zm-2.69 7.874h-.05c.166-.798.554-1.418 1.174-1.855a312.918 313.213 0 0 1 5.71-5.717h.05c-.117.672-.375 1.175-.781 1.52zM1.598 24l-.098-.05c1.399-4.172 2.148-6.322 2.248-6.45l6.74-6.694v.05C10.232 11.88 8.974 16.263 6.73 24Z"/></svg>
+                        <span>FiveM</span>
+                    </a>
+                </div>
+                <a href="#" class="sidebar-item disabled">
+                    <i class="far fa-bell"></i>
+                    <span>Watchlist</span>
+                    <span class="sidebar-badge">SOON</span>
+                </a>
+                <div class="sidebar-divider"></div>
+                <a href="#" class="sidebar-item" id="collapseBtn">
+                    <i class="fas fa-chevron-left"></i>
+                    <span>Collapse</span>
+                </a>
+            </div>
+
+            <div class="sidebar-group">
+                <div class="sidebar-label">RESOURCES</div>
+                <a href="docs.html" class="sidebar-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Documentation</span>
+                </a>
+                <a href="#" class="sidebar-item disabled">
+                    <i class="fas fa-code"></i>
+                    <span>API Reference</span>
+                    <span class="sidebar-badge">SOON</span>
+                </a>
+                <a href="support.html" class="sidebar-item">
+                    <i class="fas fa-headset"></i>
+                    <span>Support</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="sidebar-user" id="sidebarUser">
+            <div class="user-popup" id="userPopup">
+                <a href="settings.html" class="user-popup-item">
+                    <i class="fas fa-gear"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="user-popup-item">
+                    <i class="fas fa-arrow-right-from-bracket"></i>
+                    <span>Sign out</span>
+                </a>
+                <div class="user-popup-divider"></div>
+                <div class="user-popup-profile">
+                    <div class="user-popup-profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-popup-profile-info">
+                        <span class="user-popup-profile-name">@admin</span>
+                        <span class="user-popup-profile-email">admin@enam.dev</span>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="sidebar-user-info">
+                <span class="sidebar-user-name">@admin</span>
+                <span class="sidebar-user-email">admin@enam.dev</span>
+            </div>
+            <i class="fas fa-chevron-down sidebar-user-arrow"></i>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="dash-page">
+
+            <!-- Welcome -->
+            <div class="dash-welcome">
+                <h1>Welcome back, <span>@admin</span></h1>
+                <p>Here's what's happening with your account.</p>
+            </div>
+
+            <!-- Search bar -->
+            <div class="dash-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search anything..">
+                <button class="dash-search-btn">Run a search <i class="fas fa-arrow-right"></i></button>
+            </div>
+
+            <!-- Stats -->
+            <div class="dash-stats">
+                <div class="dash-stat">
+                    <div>
+                        <div class="dash-stat-label">TOTAL SEARCHES</div>
+                        <div class="dash-stat-value">0</div>
+                    </div>
+                    <div class="dash-stat-icon"><i class="fas fa-search"></i></div>
+                </div>
+                <div class="dash-stat">
+                    <div>
+                        <div class="dash-stat-label">ACTIVE MONITORS</div>
+                        <div class="dash-stat-value">0</div>
+                    </div>
+                    <div class="dash-stat-icon"><i class="fas fa-bell"></i></div>
+                </div>
+                <div class="dash-stat">
+                    <div>
+                        <div class="dash-stat-label">BREACHES FOUND</div>
+                        <div class="dash-stat-value">0</div>
+                    </div>
+                    <div class="dash-stat-icon"><i class="fas fa-clock"></i></div>
+                </div>
+            </div>
+
+            <!-- Start a search -->
+            <div class="dash-section-header">
+                <h2>Start a search</h2>
+                <span>Jump straight into any index.</span>
+            </div>
+
+            <div class="dash-indexes">
+                <a href="index.html" class="dash-index-card">
+                    <div class="dash-index-icon"><i class="fas fa-shield-halved"></i></div>
+                    <h3>Breach Data</h3>
+                    <p>Indexed breaches & leaks</p>
+                </a>
+                <a href="discord.html" class="dash-index-card">
+                    <div class="dash-index-icon"><i class="fab fa-discord"></i></div>
+                    <h3>Discord</h3>
+                    <p>Discord users & connections</p>
+                </a>
+                <a href="fivem.html" class="dash-index-card">
+                    <div class="dash-index-icon">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M22.4 24h-5.225c-.117 0-.455-1.127-1.026-3.375-1.982-6.909-3.124-10.946-3.417-12.12l3.37-3.325h.099c.454 1.42 2.554 7.676 6.299 18.768ZM12.342 7.084h-.048a3.382 3.385 0 0 1-.098-.492v-.098a102.619 102.715 0 0 1 3.272-3.275c.13.196.196.356.196.491v.05a140.694 140.826 0 0 1-3.322 3.324ZM5.994 10.9h-.05c.67-2.12 1.076-3.209 1.223-3.275L14.492.343c.08 0 .258.524.533 1.562zm1.37-4.014h-.05C8.813 2.342 9.612.048 9.71 0h4.495v.05a664.971 664.971 0 0 1-6.841 6.839Zm-2.69 7.874h-.05c.166-.798.554-1.418 1.174-1.855a312.918 313.213 0 0 1 5.71-5.717h.05c-.117.672-.375 1.175-.781 1.52zM1.598 24l-.098-.05c1.399-4.172 2.148-6.322 2.248-6.45l6.74-6.694v.05C10.232 11.88 8.974 16.263 6.73 24Z"/></svg>
+                    </div>
+                    <h3>FiveM</h3>
+                    <p>FiveM, Steam & license IDs</p>
+                </a>
+            </div>
+
+            <!-- Bottom row -->
+            <div class="dash-bottom">
+                <!-- Recent activity -->
+                <div class="dash-card">
+                    <div class="dash-card-header">Recent activity</div>
+                    <div class="dash-card-body">
+                        <div class="dash-activity-empty">
+                            <div class="dash-activity-empty-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <p>No activity yet. Run your first search from the home page.</p>
+                            <a href="index.html" class="dash-activity-link">Run a search <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick start -->
+                <div class="dash-card">
+                    <div class="dash-card-header">Quick start</div>
+                    <div class="dash-card-body" style="padding:8px 20px;">
+                        <a href="index.html" class="dash-quick-item">
+                            <span class="dash-quick-num">1</span>
+                            <span class="dash-quick-text">Run your first breach search</span>
+                            <span class="dash-quick-right"><i class="fas fa-arrow-right"></i></span>
+                        </a>
+                        <a href="#" class="dash-quick-item" style="opacity:0.35;pointer-events:none;">
+                            <span class="dash-quick-num">2</span>
+                            <span class="dash-quick-text">Add an email to your watchlist</span>
+                            <span class="dash-quick-right"><span class="dash-quick-badge">SOON</span></span>
+                        </a>
+                        <a href="docs.html" class="dash-quick-item">
+                            <span class="dash-quick-num">3</span>
+                            <span class="dash-quick-text">Read the API documentation</span>
+                            <span class="dash-quick-right"><i class="fas fa-arrow-right"></i></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const searchesToggle = document.getElementById('searchesToggle');
+        const searchesSub = document.getElementById('searchesSub');
+        const collapseBtn = document.getElementById('collapseBtn');
+        const sidebar = document.getElementById('sidebar');
+
+        if (searchesToggle) {
+            searchesToggle.addEventListener('click', () => {
+                searchesToggle.classList.toggle('open');
+                searchesSub.classList.toggle('open');
+            });
+        }
+
+        if (collapseBtn) {
+            collapseBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                sidebar.classList.toggle('collapsed');
+            });
+        }
+
+        const sidebarUser = document.getElementById('sidebarUser');
+        const userPopup = document.getElementById('userPopup');
+        if (sidebarUser && userPopup) {
+            sidebarUser.addEventListener('click', (e) => {
+                if (e.target.closest('.user-popup')) return;
+                e.stopPropagation();
+                userPopup.classList.toggle('open');
+            });
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.sidebar-user')) userPopup.classList.remove('open');
+            });
+        }
+    </script>
+</body>
+</html>

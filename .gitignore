@@ -1,0 +1,3 @@
+# Ne jamais commit les fichiers sensibles
+.env
+node_modules/
