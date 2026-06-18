@@ -22,23 +22,6 @@ catTabs.forEach(tab => {
     });
 });
 
-// ========== DATA FILES (silent — loaded by backend at startup) ==========
-let hasLocalFiles = false;
-let localFileCount = 0;
-
-async function checkLocalFiles() {
-    try {
-        const res = await fetch('/api/files');
-        const data = await res.json();
-        hasLocalFiles = data.success && data.files && data.files.length > 0;
-        localFileCount = data.success && data.files ? data.files.length : 0;
-    } catch (e) {
-        hasLocalFiles = false;
-        localFileCount = 0;
-    }
-}
-checkLocalFiles();
-
 // ========== CLEAR ALL ==========
 if (clearAllBtn) {
     clearAllBtn.addEventListener('click', () => {
@@ -184,11 +167,10 @@ if (searchBtn) {
         }
 
         // Show skeleton loading
-        const fileLabel = localFileCount > 0 ? `${localFileCount} file${localFileCount !== 1 ? 's' : ''}` : 'local data';
         resultsArea.innerHTML = `
             <div class="search-status">
                 <span class="search-status-dot"></span>
-                <span class="search-status-text">Searching ${fileLabel}...</span>
+                <span class="search-status-text">Searching BrixHub...</span>
             </div>
             <div class="result-list">
                 <div class="skeleton skeleton-title"></div>
@@ -1122,50 +1104,20 @@ if (searchBtn) {
             });
 
             try {
-                const [localRes, brixRes] = await Promise.allSettled([
-                    fetch('/api/search-local', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ fieldTerms })
-                    }),
-                    fetch('/api/search-brixhub', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ fieldTerms })
-                    })
-                ]);
+                const brixRes = await fetch('https://vivacious-empathy-production-0283.up.railway.app/api/search-brixhub', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fieldTerms })
+                });
 
-                let localData = null;
                 let brixData = null;
+                if (brixRes.ok) brixData = await brixRes.json();
 
-                if (localRes.status === 'fulfilled') {
-                    const res = localRes.value;
-                    if (res.ok) localData = await res.json();
-                }
-                if (brixRes.status === 'fulfilled') {
-                    const res = brixRes.value;
-                    if (res.ok) brixData = await res.json();
-                }
-
-                // Build unified results
+                // Build results
                 let plainText = '';
                 let allRecords = [];
-                let localCount = 0;
                 let brixCount = 0;
-                let localTookMs = 0;
                 let brixTookMs = 0;
-
-                if (localData?.success && localData.totalMatches > 0) {
-                    localCount = localData.totalMatches;
-                    localTookMs = localData.tookMs || 0;
-                    localData.fileResults.forEach(fr => {
-                        fr.matches.forEach(m => {
-                            if (m.record) {
-                                allRecords.push({ type: 'local', data: m.record });
-                            }
-                        });
-                    });
-                }
 
                 if (brixData?.success && brixData.results?.length > 0) {
                     brixCount = brixData.results.length;
@@ -1176,7 +1128,7 @@ if (searchBtn) {
                 }
 
                 const totalCount = allRecords.length;
-                const totalTime = ((localTookMs + brixTookMs) / 1000).toFixed(2);
+                const totalTime = (brixTookMs / 1000).toFixed(2);
 
                 if (totalCount > 0) {
                     let html = `
@@ -1193,22 +1145,7 @@ if (searchBtn) {
 
                     html += `<div class="result-list">`;
                     allRecords.forEach(rec => {
-                        if (rec.type === 'local') {
-                            const r = rec.data;
-                            plainText += `=== Record ===\n`;
-                            Object.entries(r).forEach(([k, v]) => { plainText += `${k}: ${v}\n`; });
-                            plainText += '\n';
-
-                            html += `<div class="result-backend-card">`;
-                            html += `<div class="result-backend-header">`;
-                            html += `<span class="result-backend-title"><i class="fas fa-database"></i>Record</span>`;
-                            html += `</div>`;
-                            html += `<div class="result-fields">`;
-                            Object.entries(r).forEach(([k, v]) => {
-                                html += `<div class="result-field"><span class="result-field-label">${k}:</span><span class="result-field-value">${escapeHtml(v)}</span><button class="field-copy-btn" data-value="${escapeHtml(v)}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
-                            });
-                            html += `</div></div>`;
-                        } else if (rec.type === 'brixhub') {
+                        {
                             const r = rec.data;
                             const sources = (r._sources || []).join(', ');
                             plainText += `=== Record ===\n`;
@@ -1239,16 +1176,8 @@ if (searchBtn) {
                     document.getElementById('copyAllBtn')?.addEventListener('click', function() { navigator.clipboard.writeText(plainText.trim()); this.classList.add('copied'); this.innerHTML = '<i class="fas fa-check"></i> Copied!'; setTimeout(() => { this.classList.remove('copied'); this.innerHTML = '<i class="fas fa-copy"></i> Copy all'; }, 2000); });
                     document.getElementById('downloadTxtBtn')?.addEventListener('click', function() { const blob = new Blob([plainText.trim()], { type: 'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'results.txt'; a.click(); URL.revokeObjectURL(a.href); });
                     resultsArea.querySelectorAll('.field-copy-btn').forEach(btn => { btn.addEventListener('click', function() { navigator.clipboard.writeText(this.dataset.value); this.classList.add('copied'); this.innerHTML = '<i class="fas fa-check"></i>'; setTimeout(() => { this.classList.remove('copied'); this.innerHTML = '<i class="fas fa-copy"></i>'; }, 1500); }); });
-                } else if (localData?.filesSearched === 0) {
-                    resultsArea.innerHTML = `
-                        <div class="results-empty">
-                            <i class="fas fa-folder-open"></i>
-                            <h3>No data files loaded</h3>
-                            <p>Add .txt or .jsonl files to the <code>data/</code> folder and restart the backend.</p>
-                        </div>
-                    `;
                 } else {
-                    const timeTaken = ((localTookMs || 10) / 1000).toFixed(2);
+                    const timeTaken = (brixTookMs / 1000).toFixed(2);
                     resultsArea.innerHTML = `
                         <div class="results-empty">
                             <i class="fas fa-circle-xmark"></i>
@@ -1265,8 +1194,8 @@ if (searchBtn) {
                     <div class="results-empty">
                         <i class="fas fa-triangle-exclamation"></i>
                         <h3>Backend unreachable</h3>
-                        <p>Could not connect to localhost:3000.</p>
-                        <p>Make sure you ran <code>node server.js</code> in the project folder.</p>
+                        <p>Could not connect to the search backend.</p>
+                        <p>Please try again later.</p>
                     </div>
                 `;
                 return;
