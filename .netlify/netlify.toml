@@ -8,7 +8,7 @@ redirects = []
 
 [build]
 publish = "C:\\Users\\y4npkacfys\\CascadeProjects\\enam-searcher"
-publishOrigin = "config"
+publishOrigin = "default"
 
 [build.environment]
 

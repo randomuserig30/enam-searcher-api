@@ -8,6 +8,58 @@ function escapeHtml(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+function formatFieldLabel(key) {
+    const map = {
+        nom_famille: 'Nom de famille',
+        prenom: 'Prénom',
+        nom_naissance: 'Nom de naissance',
+        nom_affichage: 'Nom d\'affichage',
+        nom_utilisateur: 'Nom d\'utilisateur',
+        date_naissance: 'Date de naissance',
+        annee_naissance: 'Année de naissance',
+        jour_naissance: 'Jour de naissance',
+        mois_naissance: 'Mois de naissance',
+        genre: 'Genre',
+        civilite: 'Civilité',
+        email: 'Email',
+        telephone: 'Téléphone',
+        mobile: 'Mobile',
+        adresse_ip: 'Adresse IP',
+        adresse: 'Adresse',
+        complement_adresse: 'Complément d\'adresse',
+        code_postal: 'Code postal',
+        ville: 'Ville',
+        ville_naissance: 'Ville de naissance',
+        lieu_naissance: 'Lieu de naissance',
+        pays: 'Pays',
+        region: 'Région',
+        departement: 'Département',
+        nir: 'NIR',
+        iban: 'IBAN',
+        bic: 'BIC',
+        siret: 'SIRET',
+        siren: 'SIREN',
+        vin_plaque: 'VIN / Plaque',
+        immatriculation: 'Immatriculation',
+        numero_serie: 'Numéro de série',
+        marque: 'Marque',
+        modele: 'Modèle',
+        societe: 'Société',
+        profession: 'Profession',
+        fonction: 'Fonction',
+        steam_id: 'Steam ID',
+        fivem_license: 'FiveM License',
+        fivem_license2: 'FiveM License 2',
+        fivem_id: 'FiveM ID',
+        xbox_live_id: 'Xbox Live ID',
+        live_id: 'Live ID',
+        discord_id: 'Discord ID',
+        _sources: 'Sources',
+        _confidence: 'Confiance'
+    };
+    return map[key] || key;
+}
+
 // ========== CATEGORY TABS ==========
 const catTabs = document.querySelectorAll('.cat-tab');
 const tabPanels = document.querySelectorAll('.tab-panel');
@@ -170,7 +222,7 @@ if (searchBtn) {
         resultsArea.innerHTML = `
             <div class="search-status">
                 <span class="search-status-dot"></span>
-                <span class="search-status-text">Searching BrixHub...</span>
+                <span class="search-status-text">Searching Enam...</span>
             </div>
             <div class="result-list">
                 <div class="skeleton skeleton-title"></div>
@@ -1104,7 +1156,7 @@ if (searchBtn) {
             });
 
             try {
-                const brixRes = await fetch('https://vivacious-empathy-production-0283.up.railway.app/api/search-brixhub', {
+                const brixRes = await fetch('https://regardless-reel-horn-boolean.trycloudflare.com/api/search-brixhub', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ fieldTerms })
@@ -1162,10 +1214,10 @@ if (searchBtn) {
                             html += `<div class="result-fields">`;
                             Object.entries(r).forEach(([k, v]) => {
                                 if (k.startsWith('_')) return;
-                                html += `<div class="result-field"><span class="result-field-label">${k}:</span><span class="result-field-value">${escapeHtml(v)}</span><button class="field-copy-btn" data-value="${escapeHtml(v)}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
+                                html += `<div class="result-field"><span class="result-field-label">${formatFieldLabel(k)}:</span><span class="result-field-value">${escapeHtml(v)}</span><button class="field-copy-btn" data-value="${escapeHtml(v)}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
                             });
                             if (sources) {
-                                html += `<div class="result-field"><span class="result-field-label">Sources:</span><span class="result-field-value">${escapeHtml(sources)}</span></div>`;
+                                html += `<div class="result-field"><span class="result-field-label">${formatFieldLabel('_sources')}:</span><span class="result-field-value">${escapeHtml(sources)}</span></div>`;
                             }
                             html += `</div></div>`;
                         }

@@ -10,11 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script type="module">
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { auth } from "./firebase-config.js";
-        onAuthStateChanged(auth, (user) => {
-            if (!user) { window.location.replace('index.html'); }
-        });
+        await auth.authStateReady();
+        if (!auth.currentUser) { window.location.replace('index.html'); }
     </script>
 </head>
 <body>
@@ -32,7 +30,7 @@
                 <a href="dashboard.html" class="nav-link active"><i class="fas fa-th-large"></i> Dashboard</a>
                 <a href="breach.html" class="nav-link"><i class="fas fa-shield-halved"></i> Breach</a>
                 <a href="discord.html" class="nav-link"><i class="fab fa-discord"></i> Discord</a>
-                <a href="#" class="nav-link disabled"><i class="far fa-bell"></i> Watchlist <span class="nav-badge">SOON</span></a>
+                <a href="#" class="nav-link disabled"><i class="fas fa-euro-sign"></i> Tarifs <span class="nav-badge">SOON</span></a>
                 <span class="nav-sep"></span>
                 <a href="docs.html" class="nav-link"><i class="fas fa-file-alt"></i> Docs</a>
                 <a href="support.html" class="nav-link"><i class="fas fa-headset"></i> Support</a>
@@ -97,7 +95,7 @@
             </div>
 
             <div class="dash-indexes">
-                <a href="index.html" class="dash-index-card">
+                <a href="breach.html" class="dash-index-card">
                     <div class="dash-index-icon"><i class="fas fa-shield-halved"></i></div>
                     <h3>Breach Data</h3>
                     <p>Indexed breaches & leaks</p>
