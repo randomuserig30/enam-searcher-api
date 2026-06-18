@@ -228,7 +228,7 @@ app.post('/api/search-local', async (req, res) => {
 
 // ========== BRIXHUB API PROXY ==========
 const BRIXHUB_BASE = 'https://brixhub.net/api/v1';
-const BRIXHUB_KEY = 'brix_1VAQacfmtLqtf_-iGwv9K2Q7AUf4vdro3seeAu2K72-GdQtV';
+const BRIXHUB_KEY = 'brix_TOqwj-ofmKNHqNGG1J-DmuJhmbuoq73_bV956H0MoMn35_0U';
 
 function mapToBrixHubFields(fieldTerms) {
     const body = {};
