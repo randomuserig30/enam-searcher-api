@@ -1,374 +1,123 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <script>(function(){var t=localStorage.getItem('enam-theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light')}else if(t==='system'){if(!window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','light')}}})();</script>
-    <title>Enam Searcher - Database Search Engine</title>
+    <title>Enam Searcher</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
+<body class="login-body">
 
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-top">
-            <a href="#" class="logo sidebar-logo">
+    <div class="login-bg"></div>
+
+    <div class="login-wrap">
+        <div class="login-left">
+            <a href="#" class="login-logo">
                 <i class="fas fa-bolt"></i>
                 <span>Enam<span class="logo-accent"> Searcher</span></span>
             </a>
-            <div class="sidebar-group">
-                <div class="sidebar-label">MAIN</div>
-                <a href="dashboard.html" class="sidebar-item">
-                    <i class="fas fa-th-large"></i>
-                    <span>Dashboard</span>
-                </a>
-                <div class="sidebar-item has-sub open" id="searchesToggle">
-                    <i class="fas fa-search"></i>
-                    <span>Searches</span>
-                    <i class="fas fa-chevron-down sidebar-arrow"></i>
-                </div>
-                <div class="sidebar-sub open" id="searchesSub">
-                    <a href="#" class="sidebar-subitem active">
-                        <i class="fas fa-shield-halved"></i>
-                        <span>Breach Data</span>
-                    </a>
-                    <a href="discord.html" class="sidebar-subitem">
-                        <i class="fab fa-discord"></i>
-                        <span>Discord</span>
-                    </a>
-                    <a href="fivem.html" class="sidebar-subitem">
-                        <svg class="sidebar-svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M22.4 24h-5.225c-.117 0-.455-1.127-1.026-3.375-1.982-6.909-3.124-10.946-3.417-12.12l3.37-3.325h.099c.454 1.42 2.554 7.676 6.299 18.768ZM12.342 7.084h-.048a3.382 3.385 0 0 1-.098-.492v-.098a102.619 102.715 0 0 1 3.272-3.275c.13.196.196.356.196.491v.05a140.694 140.826 0 0 1-3.322 3.324ZM5.994 10.9h-.05c.67-2.12 1.076-3.209 1.223-3.275L14.492.343c.08 0 .258.524.533 1.562zm1.37-4.014h-.05C8.813 2.342 9.612.048 9.71 0h4.495v.05a664.971 664.971 0 0 1-6.841 6.839Zm-2.69 7.874h-.05c.166-.798.554-1.418 1.174-1.855a312.918 313.213 0 0 1 5.71-5.717h.05c-.117.672-.375 1.175-.781 1.52zM1.598 24l-.098-.05c1.399-4.172 2.148-6.322 2.248-6.45l6.74-6.694v.05C10.232 11.88 8.974 16.263 6.73 24Z"/></svg>
-                        <span>FiveM</span>
-                    </a>
-                </div>
-                <a href="#" class="sidebar-item disabled">
-                    <i class="far fa-bell"></i>
-                    <span>Watchlist</span>
-                    <span class="sidebar-badge">SOON</span>
-                </a>
-                <div class="sidebar-divider"></div>
-                <a href="#" class="sidebar-item" id="collapseBtn">
-                    <i class="fas fa-chevron-left"></i>
-                    <span>Collapse</span>
-                </a>
-            </div>
-
-            <div class="sidebar-group">
-                <div class="sidebar-label">RESOURCES</div>
-                <a href="docs.html" class="sidebar-item">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Documentation</span>
-                </a>
-                <a href="#" class="sidebar-item disabled">
-                    <i class="fas fa-code"></i>
-                    <span>API Reference</span>
-                    <span class="sidebar-badge">SOON</span>
-                </a>
-                <a href="support.html" class="sidebar-item">
-                    <i class="fas fa-headset"></i>
-                    <span>Support</span>
-                </a>
+            <h1 class="login-title">Search across billions<br>of indexed records.</h1>
+            <p class="login-sub">Cross-reference identities, credentials, and identifiers across breach data, Discord, and gaming platforms.</p>
+            <div class="login-badges">
+                <span class="login-badge"><i class="fas fa-database"></i> 2.4B records</span>
+                <span class="login-badge"><i class="fas fa-shield-halved"></i> 482 sources</span>
+                <span class="login-badge"><i class="fas fa-bolt"></i> &lt; 200ms</span>
             </div>
         </div>
 
-        <!-- User profile at bottom -->
-        <div class="sidebar-user" id="sidebarUser">
-            <div class="user-popup" id="userPopup">
-                <a href="settings.html" class="user-popup-item">
-                    <i class="fas fa-gear"></i>
-                    <span>Settings</span>
-                </a>
-                <a href="#" class="user-popup-item">
-                    <i class="fas fa-arrow-right-from-bracket"></i>
-                    <span>Sign out</span>
-                </a>
-                <div class="user-popup-divider"></div>
-                <div class="user-popup-profile">
-                    <div class="user-popup-profile-avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="user-popup-profile-info">
-                        <span class="user-popup-profile-name">@admin</span>
-                        <span class="user-popup-profile-email">admin@enam.dev</span>
-                    </div>
+        <div class="login-right">
+            <div class="login-card">
+                <div class="login-tabs">
+                    <button class="login-tab active" data-form="signin">Sign in</button>
+                    <button class="login-tab" data-form="signup">Create account</button>
                 </div>
+
+                <form class="login-form active" id="signinForm">
+                    <div class="login-field">
+                        <label>Email</label>
+                        <input type="email" id="siEmail" placeholder="you@example.com" required>
+                    </div>
+                    <div class="login-field">
+                        <label>Password</label>
+                        <input type="password" id="siPassword" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="login-submit">Sign in <i class="fas fa-arrow-right"></i></button>
+                </form>
+
+                <form class="login-form" id="signupForm">
+                    <div class="login-field">
+                        <label>Email</label>
+                        <input type="email" id="suEmail" placeholder="you@example.com" required>
+                    </div>
+                    <div class="login-field">
+                        <label>Password</label>
+                        <input type="password" id="suPassword" placeholder="Create a password" required minlength="6">
+                    </div>
+                    <button type="submit" class="login-submit">Create account <i class="fas fa-arrow-right"></i></button>
+                </form>
+
+                <div class="login-msg" id="loginMsg"></div>
             </div>
-            <div class="sidebar-user-avatar">
-                <i class="fas fa-user"></i>
-            </div>
-            <div class="sidebar-user-info">
-                <span class="sidebar-user-name">@admin</span>
-                <span class="sidebar-user-email">admin@enam.dev</span>
-            </div>
-            <i class="fas fa-chevron-down sidebar-user-arrow"></i>
-        </div>
-    </aside>
-
-    <!-- Main Content -->
-    <div class="main-content" id="mainContent">
-        <div class="breach-page">
-
-            <!-- Page Header -->
-            <div class="page-header">
-                <h1 class="page-title">Breach Data</h1>
-                <p class="page-subtitle">Cross-reference identity, addresses, contact and credentials across every leak we index.</p>
-            </div>
-
-            <!-- Search Form Card -->
-            <div class="breach-card">
-                <!-- Category Tabs -->
-                <div class="category-tabs">
-                    <button class="cat-tab active" data-cat="identity">Identity</button>
-                    <button class="cat-tab" data-cat="contact">Contact</button>
-                    <button class="cat-tab" data-cat="address">Address</button>
-                    <button class="cat-tab" data-cat="birth">Birth</button>
-                    <button class="cat-tab" data-cat="financial">Financial</button>
-                    <button class="cat-tab" data-cat="credentials">Credentials</button>
-                    <button class="cat-tab" data-cat="identifiers">Identifiers</button>
-                </div>
-
-                <!-- Identity Tab -->
-                <div class="tab-panel active" id="panel-identity">
-                    <div class="form-grid">
-                        <div class="field-group">
-                            <label class="field-label">FIRST NAME</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="prenom,first_name,Prenom,FirstName" placeholder="Jane">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">LAST NAME</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="nom,last_name,Nom,LastName" placeholder="Doe">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">BIRTH NAME</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="nom_naissance,birth_name,maiden_name" placeholder="Maiden name">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">DISPLAY NAME</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="display_name,pseudo,screen_name" placeholder="janedoe">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">USERNAME</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="username,login,user" placeholder="jdoe92">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">GENDER</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="gender,sexe,sex" placeholder="F / M">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Contact Tab -->
-                <div class="tab-panel" id="panel-contact">
-                    <div class="form-grid">
-                        <div class="field-group">
-                            <label class="field-label">EMAIL</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="email,Email,mail" placeholder="user@example.com">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">PHONE</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="telephone,Telephone,phone,Phone,tel,mobile" placeholder="+1 555 123 4567">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Address Tab -->
-                <div class="tab-panel" id="panel-address">
-                    <div class="form-grid">
-                        <div class="field-group">
-                            <label class="field-label">CITY</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="ville,city,commune" placeholder="New York">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">STATE</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="state,region,departement" placeholder="NY">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">ZIP CODE</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="cp,code_postal,postal_code,zip" placeholder="10001">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">COUNTRY</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="pays,country,Country" placeholder="US">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Birth Tab -->
-                <div class="tab-panel" id="panel-birth">
-                    <div class="form-grid">
-                        <div class="field-group">
-                            <label class="field-label">DATE OF BIRTH</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="birthdate,date_naissance,dob,naissance" placeholder="1992-05-14">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">AGE</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="age" placeholder="32">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Financial Tab -->
-                <div class="tab-panel" id="panel-financial">
-                    <div class="form-grid">
-                        <div class="field-group">
-                            <label class="field-label">CREDIT CARD (LAST 4)</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="cc,credit_card,cc_last4,card" placeholder="4821">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">BANK NAME</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="bank,bank_name,banque" placeholder="Chase">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Credentials Tab -->
-                <div class="tab-panel" id="panel-credentials">
-                    <div class="form-grid">
-                        <div class="field-group">
-                            <label class="field-label">PASSWORD</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="password,pass,mdp" placeholder="password123">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">HASH</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="hash,password_hash,pwd_hash" placeholder="5f4dcc3b5aa765d61...">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Identifiers Tab -->
-                <div class="tab-panel" id="panel-identifiers">
-                    <div class="form-grid">
-                        <div class="field-group">
-                            <label class="field-label">IP ADDRESS</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="ip,ip_address" placeholder="192.168.1.1">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">SSN (LAST 4)</label>
-                            <div class="field-row">
-                                <input type="text" class="field-input" data-json-keys="ssn,social_security,numero_securite_sociale" placeholder="1234">
-                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Match Options Panel (shared) -->
-                <div class="match-panel" id="matchPanel">
-                    <div class="match-panel-header">MATCH OPTIONS</div>
-                    <div class="match-section-label">MATCH TYPE</div>
-                    <div class="match-types">
-                        <button class="match-type-btn active" data-val="contains">Contains</button>
-                        <button class="match-type-btn" data-val="exact">Exact match</button>
-                        <button class="match-type-btn" data-val="starts">Starts with</button>
-                        <button class="match-type-btn" data-val="ends">Ends with</button>
-                        <button class="match-type-btn" data-val="regex">Regex</button>
-                    </div>
-                    <div class="match-divider"></div>
-                    <label class="match-option">
-                        <input type="checkbox" class="match-checkbox" data-opt="wildcard">
-                        <span class="match-option-text">
-                            <strong>Wildcard mode</strong>
-                            <small>Allow * and ? in the value.</small>
-                        </span>
-                    </label>
-                    <label class="match-option">
-                        <input type="checkbox" class="match-checkbox" data-opt="case">
-                        <span class="match-option-text">
-                            <strong>Case sensitive</strong>
-                        </span>
-                    </label>
-                    <label class="match-option">
-                        <input type="checkbox" class="match-checkbox" data-opt="fuzzy">
-                        <span class="match-option-text">
-                            <strong>Fuzzy match</strong>
-                            <small>Tolerate typos via AUTO fuzziness.</small>
-                        </span>
-                    </label>
-                </div>
-
-                <!-- Actions -->
-                <div class="form-actions">
-                    <button class="clear-btn" id="clearAllBtn">
-                        <i class="fas fa-rotate-left"></i> Clear all
-                    </button>
-                    <button class="search-submit-btn" id="searchBtn">
-                        Search <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Results Area -->
-            <div class="results-area" id="resultsArea">
-                <div class="results-empty">
-                    <i class="fas fa-rocket"></i>
-                    <h3>Run a breach lookup.</h3>
-                    <p>Fill at least one field. Combine multiple fields with AND &mdash; every record must match all of them.</p>
-                </div>
-            </div>
-
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        const tabs = document.querySelectorAll(".login-tab");
+        const forms = document.querySelectorAll(".login-form");
+        const msg = document.getElementById("loginMsg");
+
+        tabs.forEach(tab => {
+            tab.addEventListener("click", () => {
+                tabs.forEach(t => t.classList.remove("active"));
+                forms.forEach(f => f.classList.remove("active"));
+                tab.classList.add("active");
+                document.getElementById(tab.dataset.form + "Form").classList.add("active");
+                msg.textContent = "";
+                msg.className = "login-msg";
+            });
+        });
+
+        function showMsg(text, isError) {
+            msg.textContent = text;
+            msg.className = "login-msg " + (isError ? "error" : "success");
+        }
+    </script>
+    <script type="module">
+        import { loginUser, registerUser } from "./auth.js";
+
+        document.getElementById("signinForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const email = document.getElementById("siEmail").value.trim();
+            const password = document.getElementById("siPassword").value;
+            try {
+                await loginUser(email, password);
+                window.location.replace("dashboard.html");
+            } catch (err) {
+                showMsg(err.message || "Invalid email or password.", true);
+            }
+        });
+
+        document.getElementById("signupForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const email = document.getElementById("suEmail").value.trim();
+            const password = document.getElementById("suPassword").value;
+            if (password.length < 6) {
+                showMsg("Password must be at least 6 characters.", true);
+                return;
+            }
+            try {
+                await registerUser(email, password);
+                window.location.replace("setup.html");
+            } catch (err) {
+                showMsg(err.message || "Could not create account.", true);
+            }
+        });
+    </script>
 </body>
 </html>

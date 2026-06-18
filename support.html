@@ -9,206 +9,82 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        .support-page {
-            padding: 40px 48px;
-        }
-
-        .support-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 32px;
-        }
-
-        .support-header-left h1 {
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            margin-bottom: 8px;
-        }
-
-        .support-header-left p {
-            color: var(--text-secondary);
-            font-size: 0.92rem;
-        }
-
-        .new-ticket-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: transparent;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            font-size: 0.88rem;
-            font-weight: 600;
-            font-family: inherit;
-            cursor: pointer;
-            transition: var(--transition);
-            white-space: nowrap;
-        }
-
-        .new-ticket-btn:hover {
-            border-color: var(--border-hover);
-            background: rgba(255, 255, 255, 0.04);
-        }
-
-        .tickets-area {
-            border: 1px dashed var(--border);
-            border-radius: var(--radius);
-            min-height: 360px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .tickets-empty {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            padding: 60px 24px;
-        }
-
-        .tickets-empty-icon {
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-            margin-bottom: 20px;
-        }
-
-        .tickets-empty-icon i {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-        }
-
-        .tickets-empty h3 {
-            font-size: 1.05rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .tickets-empty p {
-            color: var(--text-muted);
-            font-size: 0.88rem;
-        }
-    </style>
+    <script type="module">
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { auth } from "./firebase-config.js";
+        onAuthStateChanged(auth, (user) => {
+            if (!user) { window.location.replace('index.html'); }
+        });
+    </script>
 </head>
 <body>
 
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-top">
-            <a href="index.html" class="logo sidebar-logo">
-                <i class="fas fa-bolt"></i>
-                <span>Enam<span class="logo-accent"> Searcher</span></span>
-            </a>
-            <div class="sidebar-group">
-                <div class="sidebar-label">MAIN</div>
-                <a href="dashboard.html" class="sidebar-item">
-                    <i class="fas fa-th-large"></i>
-                    <span>Dashboard</span>
-                </a>
-                <div class="sidebar-item has-sub open" id="searchesToggle">
-                    <i class="fas fa-search"></i>
-                    <span>Searches</span>
-                    <i class="fas fa-chevron-down sidebar-arrow"></i>
-                </div>
-                <div class="sidebar-sub open" id="searchesSub">
-                    <a href="index.html" class="sidebar-subitem">
-                        <i class="fas fa-shield-halved"></i>
-                        <span>Breach Data</span>
-                    </a>
-                    <a href="discord.html" class="sidebar-subitem">
-                        <i class="fab fa-discord"></i>
-                        <span>Discord</span>
-                    </a>
-                    <a href="fivem.html" class="sidebar-subitem">
-                        <svg class="sidebar-svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M22.4 24h-5.225c-.117 0-.455-1.127-1.026-3.375-1.982-6.909-3.124-10.946-3.417-12.12l3.37-3.325h.099c.454 1.42 2.554 7.676 6.299 18.768ZM12.342 7.084h-.048a3.382 3.385 0 0 1-.098-.492v-.098a102.619 102.715 0 0 1 3.272-3.275c.13.196.196.356.196.491v.05a140.694 140.826 0 0 1-3.322 3.324ZM5.994 10.9h-.05c.67-2.12 1.076-3.209 1.223-3.275L14.492.343c.08 0 .258.524.533 1.562zm1.37-4.014h-.05C8.813 2.342 9.612.048 9.71 0h4.495v.05a664.971 664.971 0 0 1-6.841 6.839Zm-2.69 7.874h-.05c.166-.798.554-1.418 1.174-1.855a312.918 313.213 0 0 1 5.71-5.717h.05c-.117.672-.375 1.175-.781 1.52zM1.598 24l-.098-.05c1.399-4.172 2.148-6.322 2.248-6.45l6.74-6.694v.05C10.232 11.88 8.974 16.263 6.73 24Z"/></svg>
-                        <span>FiveM</span>
-                    </a>
-                </div>
-                <a href="#" class="sidebar-item disabled">
-                    <i class="far fa-bell"></i>
-                    <span>Watchlist</span>
-                    <span class="sidebar-badge">SOON</span>
-                </a>
-                <div class="sidebar-divider"></div>
-                <a href="#" class="sidebar-item" id="collapseBtn">
-                    <i class="fas fa-chevron-left"></i>
-                    <span>Collapse</span>
+    <!-- Top Navbar -->
+    <nav class="topnav">
+        <div class="topnav-inner">
+            <div class="nav-left">
+                <a href="dashboard.html" class="logo">
+                    <i class="fas fa-bolt"></i>
+                    <span>Enam<span class="logo-accent"> Searcher</span></span>
                 </a>
             </div>
-
-            <div class="sidebar-group">
-                <div class="sidebar-label">RESOURCES</div>
-                <a href="docs.html" class="sidebar-item">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Documentation</span>
-                </a>
-                <a href="#" class="sidebar-item disabled">
-                    <i class="fas fa-code"></i>
-                    <span>API Reference</span>
-                    <span class="sidebar-badge">SOON</span>
-                </a>
-                <a href="support.html" class="sidebar-item">
-                    <i class="fas fa-headset"></i>
-                    <span>Support</span>
-                </a>
+            <div class="nav-center">
+                <a href="dashboard.html" class="nav-link"><i class="fas fa-th-large"></i> Dashboard</a>
+                <a href="breach.html" class="nav-link"><i class="fas fa-shield-halved"></i> Breach</a>
+                <a href="discord.html" class="nav-link"><i class="fab fa-discord"></i> Discord</a>
+                <a href="#" class="nav-link disabled"><i class="far fa-bell"></i> Watchlist <span class="nav-badge">SOON</span></a>
+                <span class="nav-sep"></span>
+                <a href="docs.html" class="nav-link"><i class="fas fa-file-alt"></i> Docs</a>
+                <a href="support.html" class="nav-link active"><i class="fas fa-headset"></i> Support</a>
             </div>
-        </div>
-
-        <!-- User profile at bottom -->
-        <div class="sidebar-user" id="sidebarUser">
-            <div class="user-popup" id="userPopup">
-                <a href="settings.html" class="user-popup-item">
-                    <i class="fas fa-gear"></i>
-                    <span>Settings</span>
-                </a>
-                <a href="#" class="user-popup-item">
-                    <i class="fas fa-arrow-right-from-bracket"></i>
-                    <span>Sign out</span>
-                </a>
-                <div class="user-popup-divider"></div>
-                <div class="user-popup-profile">
-                    <div class="user-popup-profile-avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="user-popup-profile-info">
-                        <span class="user-popup-profile-name">@admin</span>
-                        <span class="user-popup-profile-email">admin@enam.dev</span>
+            <div class="nav-right">
+                <div class="nav-user" id="navUser">
+                    <div class="nav-user-avatar"><i class="fas fa-user"></i></div>
+                    <span class="nav-user-name" id="navUserName">User</span>
+                    <i class="fas fa-chevron-down nav-user-arrow"></i>
+                    <div class="user-popup" id="userPopup">
+                        <a href="settings.html" class="user-popup-item">
+                            <i class="fas fa-gear"></i> <span>Settings</span>
+                        </a>
+                        <button class="user-popup-item" id="logoutBtn" style="width:100%;font-family:inherit;">
+                            <i class="fas fa-arrow-right-from-bracket"></i> <span>Sign out</span>
+                        </button>
+                        <div class="user-popup-divider"></div>
+                        <div class="user-popup-profile">
+                            <div class="user-popup-profile-avatar"><i class="fas fa-user"></i></div>
+                            <div class="user-popup-profile-info">
+                                <span class="user-popup-profile-name" id="popupUserName">User</span>
+                                <span class="user-popup-profile-email" id="popupUserEmail">user@example.com</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="sidebar-user-avatar">
-                <i class="fas fa-user"></i>
-            </div>
-            <div class="sidebar-user-info">
-                <span class="sidebar-user-name">@admin</span>
-                <span class="sidebar-user-email">admin@enam.dev</span>
-            </div>
-            <i class="fas fa-chevron-down sidebar-user-arrow"></i>
         </div>
-    </aside>
+    </nav>
 
     <!-- Main Content -->
     <div class="main-content" id="mainContent">
         <div class="support-page">
 
-            <div class="support-header">
-                <div class="support-header-left">
-                    <h1>Support tickets</h1>
-                    <p>Open a new ticket or follow up on an existing one.</p>
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb">
+                <a href="dashboard.html">Dashboard</a>
+                <span class="breadcrumb-sep"><i class="fas fa-chevron-right"></i></span>
+                <span class="breadcrumb-current">Support</span>
+            </nav>
+
+            <!-- Page Header -->
+            <div class="page-header-v2">
+                <div class="page-header-left">
+                    <h1 class="page-title">Support tickets</h1>
+                    <p class="page-subtitle">Open a new ticket or follow up on an existing one.</p>
                 </div>
-                <button class="new-ticket-btn">
-                    <i class="fas fa-plus"></i> New ticket
-                </button>
+                <div class="page-header-actions">
+                    <button class="new-ticket-btn">
+                        <i class="fas fa-plus"></i> New ticket
+                    </button>
+                </div>
             </div>
 
             <div class="tickets-area">
@@ -221,42 +97,44 @@
                 </div>
             </div>
 
+            <!-- Toast Container -->
+            <div class="toast-container" id="toastContainer"></div>
+
         </div>
     </div>
 
-    <script>
-        // Sidebar toggle
-        const searchesToggle = document.getElementById('searchesToggle');
-        const searchesSub = document.getElementById('searchesSub');
-        const collapseBtn = document.getElementById('collapseBtn');
-        const sidebar = document.getElementById('sidebar');
+    <script type="module">
+        import { logoutUser } from "./auth.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { auth } from "./firebase-config.js";
 
-        if (searchesToggle) {
-            searchesToggle.addEventListener('click', () => {
-                searchesToggle.classList.toggle('open');
-                searchesSub.classList.toggle('open');
-            });
-        }
-
-        if (collapseBtn) {
-            collapseBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                sidebar.classList.toggle('collapsed');
-            });
-        }
-
-        const sidebarUser = document.getElementById('sidebarUser');
+        const navUser = document.getElementById('navUser');
         const userPopup = document.getElementById('userPopup');
-        if (sidebarUser && userPopup) {
-            sidebarUser.addEventListener('click', (e) => {
+        if (navUser && userPopup) {
+            navUser.addEventListener('click', (e) => {
                 if (e.target.closest('.user-popup')) return;
                 e.stopPropagation();
+                navUser.classList.toggle('open');
                 userPopup.classList.toggle('open');
             });
             document.addEventListener('click', (e) => {
-                if (!e.target.closest('.sidebar-user')) userPopup.classList.remove('open');
+                if (!e.target.closest('.nav-user')) {
+                    userPopup.classList.remove('open');
+                    navUser.classList.remove('open');
+                }
             });
         }
+        document.getElementById('logoutBtn').addEventListener('click', logoutUser);
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const email = user.email || 'user@example.com';
+                const name = user.displayName || email.split('@')[0];
+                document.getElementById('navUserName').textContent = '@' + name;
+                document.getElementById('popupUserName').textContent = '@' + name;
+                document.getElementById('popupUserEmail').textContent = email;
+            }
+        });
     </script>
 </body>
 </html>

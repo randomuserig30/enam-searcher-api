@@ -11,406 +11,80 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        .settings-page {
-            padding: 40px 48px;
-            max-width: 860px;
-        }
-
-        .settings-page .page-header { margin-bottom: 28px; }
-
-        .settings-page .page-title {
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            margin-bottom: 8px;
-        }
-
-        .settings-page .page-subtitle {
-            color: var(--text-secondary);
-            font-size: 0.92rem;
-        }
-
-        /* Tabs */
-        .settings-tabs {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-bottom: 28px;
-        }
-
-        .settings-tab {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            padding: 8px 16px;
-            background: none;
-            border: 1px solid transparent;
-            border-radius: var(--radius-sm);
-            color: var(--text-secondary);
-            font-size: 0.88rem;
-            font-weight: 500;
-            font-family: inherit;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .settings-tab:hover {
-            color: var(--text-primary);
-        }
-
-        .settings-tab.active {
-            background: var(--text-primary);
-            color: var(--bg-primary);
-            border-color: var(--text-primary);
-        }
-
-        .settings-tab i {
-            font-size: 0.82rem;
-        }
-
-        /* Settings card */
-        .settings-card {
-            border: 1px dashed var(--border);
-            border-radius: var(--radius);
-            padding: 28px 28px 0;
-        }
-
-        .settings-section-title {
-            font-size: 1.05rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-
-        .settings-section-desc {
-            color: var(--text-muted);
-            font-size: 0.84rem;
-            margin-bottom: 24px;
-        }
-
-        .settings-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 0;
-            border-top: 1px solid var(--border);
-        }
-
-        .settings-row-left h4 {
-            font-size: 0.92rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .settings-row-left p {
-            color: var(--text-muted);
-            font-size: 0.82rem;
-        }
-
-        /* Theme toggle group */
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 3px;
-            gap: 2px;
-        }
-
-        .theme-btn {
-            width: 34px;
-            height: 34px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            background: none;
-            color: var(--text-muted);
-            font-size: 0.82rem;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .theme-btn:hover {
-            color: var(--text-primary);
-        }
-
-        .theme-btn.active {
-            background: var(--text-primary);
-            color: var(--bg-primary);
-        }
-
-        /* Language selector */
-        .lang-selector {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 14px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            font-size: 0.88rem;
-            font-weight: 600;
-            font-family: inherit;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .lang-selector:hover {
-            border-color: var(--border-hover);
-        }
-
-        .lang-flag {
-            font-size: 1.2rem;
-            line-height: 1;
-        }
-
-        .lang-selector i {
-            font-size: 0.6rem;
-            color: var(--text-muted);
-        }
-
-        /* Tab panels */
-        .settings-panel { display: none; }
-        .settings-panel.active { display: block; }
-
-        /* Account panel */
-        .account-field {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 0;
-            border-top: 1px solid var(--border);
-        }
-
-        .account-field:first-child {
-            border-top: none;
-            padding-top: 0;
-        }
-
-        .account-field-left h4 {
-            font-size: 0.92rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .account-field-left p {
-            color: var(--text-muted);
-            font-size: 0.82rem;
-        }
-
-        .account-field-value {
-            color: var(--text-secondary);
-            font-size: 0.88rem;
-            font-family: monospace;
-        }
-
-        /* Security panel */
-        .security-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 0;
-            border-top: 1px solid var(--border);
-        }
-
-        .security-item:first-child {
-            border-top: none;
-            padding-top: 0;
-        }
-
-        .security-item-left h4 {
-            font-size: 0.92rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .security-item-left p {
-            color: var(--text-muted);
-            font-size: 0.82rem;
-        }
-
-        .security-btn {
-            padding: 8px 16px;
-            background: none;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text-secondary);
-            font-size: 0.82rem;
-            font-weight: 600;
-            font-family: inherit;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .security-btn:hover {
-            border-color: var(--border-hover);
-            color: var(--text-primary);
-        }
-
-        .lang-dropdown {
-            display: none;
-            position: absolute;
-            top: calc(100% + 6px);
-            right: 0;
-            width: 200px;
-            background: #0a0a0a;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 4px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-            z-index: 2000;
-        }
-
-        .lang-dropdown.open {
-            display: block;
-        }
-
-        .lang-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
-            border-radius: 4px;
-            font-size: 0.88rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            cursor: default;
-            transition: var(--transition);
-        }
-
-        .lang-option.active {
-            color: var(--text-primary);
-        }
-
-        .lang-option.disabled {
-            opacity: 0.35;
-            pointer-events: none;
-        }
-
-        .lang-soon {
-            margin-left: auto;
-            font-size: 0.6rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            color: #777;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 2px 7px;
-            border-radius: 4px;
-        }
-
-        @media (max-width: 768px) {
-            .settings-page { padding: 24px 16px; }
-        }
-    </style>
+    <script type="module">
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { auth } from "./firebase-config.js";
+        onAuthStateChanged(auth, (user) => {
+            if (!user) { window.location.replace('index.html'); }
+        });
+    </script>
 </head>
 <body>
 
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-top">
-            <a href="index.html" class="logo sidebar-logo">
-                <i class="fas fa-bolt"></i>
-                <span>Enam<span class="logo-accent"> Searcher</span></span>
-            </a>
-            <div class="sidebar-group">
-                <div class="sidebar-label">MAIN</div>
-                <a href="dashboard.html" class="sidebar-item">
-                    <i class="fas fa-th-large"></i>
-                    <span>Dashboard</span>
-                </a>
-                <div class="sidebar-item has-sub open" id="searchesToggle">
-                    <i class="fas fa-search"></i>
-                    <span>Searches</span>
-                    <i class="fas fa-chevron-down sidebar-arrow"></i>
-                </div>
-                <div class="sidebar-sub open" id="searchesSub">
-                    <a href="index.html" class="sidebar-subitem">
-                        <i class="fas fa-shield-halved"></i>
-                        <span>Breach Data</span>
-                    </a>
-                    <a href="discord.html" class="sidebar-subitem">
-                        <i class="fab fa-discord"></i>
-                        <span>Discord</span>
-                    </a>
-                    <a href="fivem.html" class="sidebar-subitem">
-                        <svg class="sidebar-svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M22.4 24h-5.225c-.117 0-.455-1.127-1.026-3.375-1.982-6.909-3.124-10.946-3.417-12.12l3.37-3.325h.099c.454 1.42 2.554 7.676 6.299 18.768ZM12.342 7.084h-.048a3.382 3.385 0 0 1-.098-.492v-.098a102.619 102.715 0 0 1 3.272-3.275c.13.196.196.356.196.491v.05a140.694 140.826 0 0 1-3.322 3.324ZM5.994 10.9h-.05c.67-2.12 1.076-3.209 1.223-3.275L14.492.343c.08 0 .258.524.533 1.562zm1.37-4.014h-.05C8.813 2.342 9.612.048 9.71 0h4.495v.05a664.971 664.971 0 0 1-6.841 6.839Zm-2.69 7.874h-.05c.166-.798.554-1.418 1.174-1.855a312.918 313.213 0 0 1 5.71-5.717h.05c-.117.672-.375 1.175-.781 1.52zM1.598 24l-.098-.05c1.399-4.172 2.148-6.322 2.248-6.45l6.74-6.694v.05C10.232 11.88 8.974 16.263 6.73 24Z"/></svg>
-                        <span>FiveM</span>
-                    </a>
-                </div>
-                <a href="#" class="sidebar-item disabled">
-                    <i class="far fa-bell"></i>
-                    <span>Watchlist</span>
-                    <span class="sidebar-badge">SOON</span>
-                </a>
-                <div class="sidebar-divider"></div>
-                <a href="#" class="sidebar-item" id="collapseBtn">
-                    <i class="fas fa-chevron-left"></i>
-                    <span>Collapse</span>
+    <!-- Top Navbar -->
+    <nav class="topnav">
+        <div class="topnav-inner">
+            <div class="nav-left">
+                <a href="dashboard.html" class="logo">
+                    <i class="fas fa-bolt"></i>
+                    <span>Enam<span class="logo-accent"> Searcher</span></span>
                 </a>
             </div>
-
-            <div class="sidebar-group">
-                <div class="sidebar-label">RESOURCES</div>
-                <a href="docs.html" class="sidebar-item">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Documentation</span>
-                </a>
-                <a href="#" class="sidebar-item disabled">
-                    <i class="fas fa-code"></i>
-                    <span>API Reference</span>
-                    <span class="sidebar-badge">SOON</span>
-                </a>
-                <a href="support.html" class="sidebar-item">
-                    <i class="fas fa-headset"></i>
-                    <span>Support</span>
-                </a>
+            <div class="nav-center">
+                <a href="dashboard.html" class="nav-link"><i class="fas fa-th-large"></i> Dashboard</a>
+                <a href="breach.html" class="nav-link"><i class="fas fa-shield-halved"></i> Breach</a>
+                <a href="discord.html" class="nav-link"><i class="fab fa-discord"></i> Discord</a>
+                <a href="#" class="nav-link disabled"><i class="far fa-bell"></i> Watchlist <span class="nav-badge">SOON</span></a>
+                <span class="nav-sep"></span>
+                <a href="docs.html" class="nav-link"><i class="fas fa-file-alt"></i> Docs</a>
+                <a href="support.html" class="nav-link"><i class="fas fa-headset"></i> Support</a>
             </div>
-        </div>
-
-        <div class="sidebar-user" id="sidebarUser">
-            <div class="user-popup" id="userPopup">
-                <a href="settings.html" class="user-popup-item">
-                    <i class="fas fa-gear"></i>
-                    <span>Settings</span>
-                </a>
-                <a href="#" class="user-popup-item">
-                    <i class="fas fa-arrow-right-from-bracket"></i>
-                    <span>Sign out</span>
-                </a>
-                <div class="user-popup-divider"></div>
-                <div class="user-popup-profile">
-                    <div class="user-popup-profile-avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="user-popup-profile-info">
-                        <span class="user-popup-profile-name">@admin</span>
-                        <span class="user-popup-profile-email">admin@enam.dev</span>
+            <div class="nav-right">
+                <div class="nav-user" id="navUser">
+                    <div class="nav-user-avatar"><i class="fas fa-user"></i></div>
+                    <span class="nav-user-name" id="navUserName">User</span>
+                    <i class="fas fa-chevron-down nav-user-arrow"></i>
+                    <div class="user-popup" id="userPopup">
+                        <a href="settings.html" class="user-popup-item">
+                            <i class="fas fa-gear"></i> <span>Settings</span>
+                        </a>
+                        <button class="user-popup-item" id="logoutBtn" style="width:100%;font-family:inherit;">
+                            <i class="fas fa-arrow-right-from-bracket"></i> <span>Sign out</span>
+                        </button>
+                        <div class="user-popup-divider"></div>
+                        <div class="user-popup-profile">
+                            <div class="user-popup-profile-avatar"><i class="fas fa-user"></i></div>
+                            <div class="user-popup-profile-info">
+                                <span class="user-popup-profile-name" id="popupUserName">User</span>
+                                <span class="user-popup-profile-email" id="popupUserEmail">user@example.com</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="sidebar-user-avatar">
-                <i class="fas fa-user"></i>
-            </div>
-            <div class="sidebar-user-info">
-                <span class="sidebar-user-name">@admin</span>
-                <span class="sidebar-user-email">admin@enam.dev</span>
-            </div>
-            <i class="fas fa-chevron-down sidebar-user-arrow"></i>
         </div>
-    </aside>
+    </nav>
 
     <!-- Main Content -->
     <div class="main-content" id="mainContent">
         <div class="settings-page">
 
-            <div class="page-header">
-                <h1 class="page-title">Settings</h1>
-                <p class="page-subtitle">Manage your account, security and preferences.</p>
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb">
+                <a href="dashboard.html">Dashboard</a>
+                <span class="breadcrumb-sep"><i class="fas fa-chevron-right"></i></span>
+                <span class="breadcrumb-current">Settings</span>
+            </nav>
+
+            <!-- Page Header -->
+            <div class="page-header-v2">
+                <div class="page-header-left">
+                    <h1 class="page-title">Settings</h1>
+                    <p class="page-subtitle">Manage your account, security and preferences.</p>
+                </div>
+                <div class="page-header-actions">
+                    <a href="dashboard.html" class="header-action-btn tooltip" data-tip="Back to dashboard"><i class="fas fa-arrow-left"></i></a>
+                </div>
             </div>
 
             <div class="settings-tabs">
@@ -435,14 +109,20 @@
                             <h4>Username</h4>
                             <p>Your unique username.</p>
                         </div>
-                        <span class="account-field-value">@admin</span>
+                        <div class="account-field-right">
+                            <span class="account-field-value" id="copyUsername">@admin</span>
+                            <button class="field-copy-btn" data-target="copyUsername" title="Copy"><i class="fas fa-copy"></i></button>
+                        </div>
                     </div>
                     <div class="account-field">
                         <div class="account-field-left">
                             <h4>Email</h4>
                             <p>Your email address.</p>
                         </div>
-                        <span class="account-field-value">admin@enam.dev</span>
+                        <div class="account-field-right">
+                            <span class="account-field-value" id="copyEmail">admin@enam.dev</span>
+                            <button class="field-copy-btn" data-target="copyEmail" title="Copy"><i class="fas fa-copy"></i></button>
+                        </div>
                     </div>
                     <div class="account-field">
                         <div class="account-field-left">
@@ -464,21 +144,21 @@
                             <h4>Password</h4>
                             <p>Change your account password.</p>
                         </div>
-                        <button class="security-btn">Change password</button>
+                        <button class="security-btn" id="btnChangePassword">Change password</button>
                     </div>
                     <div class="security-item">
                         <div class="security-item-left">
                             <h4>Two-factor authentication</h4>
                             <p>Add an extra layer of security.</p>
                         </div>
-                        <button class="security-btn">Enable</button>
+                        <button class="security-btn" id="btnEnable2FA">Enable</button>
                     </div>
                     <div class="security-item">
                         <div class="security-item-left">
                             <h4>Sessions</h4>
                             <p>Sign out of all other sessions.</p>
                         </div>
-                        <button class="security-btn" style="color:#ff4444;border-color:#ff4444;">Sign out all</button>
+                        <button class="security-btn" id="btnSignOutAll">Sign out all</button>
                     </div>
                 </div>
             </div>
@@ -506,20 +186,20 @@
                             <h4>Language</h4>
                             <p>Applies across the whole app.</p>
                         </div>
-                        <div style="position:relative;">
+                        <div class="lang-wrapper">
                             <button class="lang-selector" id="langBtn">
-                                <img src="https://flagcdn.com/w40/gb.png" alt="GB" width="22" height="15" style="border-radius:2px;">
+                                <img src="https://flagcdn.com/w40/gb.png" alt="GB" width="22" height="15">
                                 EN
                                 <i class="fas fa-chevron-down"></i>
                             </button>
                             <div class="lang-dropdown" id="langDropdown">
                                 <div class="lang-option active">
-                                    <img src="https://flagcdn.com/w40/gb.png" alt="GB" width="20" height="14" style="border-radius:2px;">
+                                    <img src="https://flagcdn.com/w40/gb.png" alt="GB" width="20" height="14">
                                     <span>English</span>
-                                    <i class="fas fa-check" style="margin-left:auto;font-size:0.7rem;"></i>
+                                    <i class="fas fa-check"></i>
                                 </div>
                                 <div class="lang-option disabled">
-                                    <img src="https://flagcdn.com/w40/fr.png" alt="FR" width="20" height="14" style="border-radius:2px;">
+                                    <img src="https://flagcdn.com/w40/fr.png" alt="FR" width="20" height="14">
                                     <span>Français</span>
                                     <span class="lang-soon">SOON</span>
                                 </div>
@@ -532,40 +212,112 @@
         </div>
     </div>
 
-    <script>
-        const searchesToggle = document.getElementById('searchesToggle');
-        const searchesSub = document.getElementById('searchesSub');
-        const collapseBtn = document.getElementById('collapseBtn');
-        const sidebar = document.getElementById('sidebar');
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
 
-        if (searchesToggle) {
-            searchesToggle.addEventListener('click', () => {
-                searchesToggle.classList.toggle('open');
-                searchesSub.classList.toggle('open');
-            });
-        }
+    <!-- Modal: Change Password -->
+    <div class="modal-overlay" id="modalChangePassword">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-lock"></i> Change password</h3>
+                <button class="modal-close" data-modal="modalChangePassword"><i class="fas fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-field">
+                    <label>Current password</label>
+                    <input type="password" id="cpCurrent" placeholder="Enter your current password">
+                </div>
+                <div class="modal-field">
+                    <label>New password</label>
+                    <input type="password" id="cpNew" placeholder="Enter a new password">
+                </div>
+                <div class="modal-field">
+                    <label>Confirm new password</label>
+                    <input type="password" id="cpConfirm" placeholder="Re-enter the new password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn" data-modal="modalChangePassword">Cancel</button>
+                <button class="modal-btn primary" id="cpSave">Save password</button>
+            </div>
+        </div>
+    </div>
 
-        if (collapseBtn) {
-            collapseBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                sidebar.classList.toggle('collapsed');
-            });
-        }
+    <!-- Modal: Enable 2FA -->
+    <div class="modal-overlay" id="modalEnable2FA">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-shield-halved"></i> Enable two-factor</h3>
+                <button class="modal-close" data-modal="modalEnable2FA"><i class="fas fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-hint">Scan this QR code with your authenticator app, then enter the 6-digit code below.</p>
+                <div class="modal-qr">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=otpauth%3A%2F%2Ftotp%2FEnam%3Aadmin%40enam.dev%3Fsecret%3DJBSWY3DPEHPK3PXP%26issuer%3DEnamSearcher" alt="2FA QR">
+                </div>
+                <div class="modal-field">
+                    <label>Verification code</label>
+                    <input type="text" id="tfaCode" placeholder="123456" maxlength="6" inputmode="numeric">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn" data-modal="modalEnable2FA">Cancel</button>
+                <button class="modal-btn primary" id="tfaVerify">Verify & enable</button>
+            </div>
+        </div>
+    </div>
 
-        // User popup
-        const sidebarUser = document.getElementById('sidebarUser');
+    <!-- Modal: Sign out all -->
+    <div class="modal-overlay" id="modalSignOutAll">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-arrow-right-from-bracket"></i> Sign out all sessions</h3>
+                <button class="modal-close" data-modal="modalSignOutAll"><i class="fas fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-hint">This will sign you out on every device except the one you are currently using. Are you sure?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn" data-modal="modalSignOutAll">Cancel</button>
+                <button class="modal-btn danger" id="soaConfirm">Sign out all</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { logoutUser } from "./auth.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { auth } from "./firebase-config.js";
+
+        const navUser = document.getElementById('navUser');
         const userPopup = document.getElementById('userPopup');
-        if (sidebarUser && userPopup) {
-            sidebarUser.addEventListener('click', (e) => {
+        if (navUser && userPopup) {
+            navUser.addEventListener('click', (e) => {
                 if (e.target.closest('.user-popup')) return;
                 e.stopPropagation();
+                navUser.classList.toggle('open');
                 userPopup.classList.toggle('open');
             });
             document.addEventListener('click', (e) => {
-                if (!e.target.closest('.sidebar-user')) userPopup.classList.remove('open');
+                if (!e.target.closest('.nav-user')) {
+                    userPopup.classList.remove('open');
+                    navUser.classList.remove('open');
+                }
             });
         }
+        document.getElementById('logoutBtn').addEventListener('click', logoutUser);
 
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const email = user.email || 'user@example.com';
+                const name = user.displayName || email.split('@')[0];
+                document.getElementById('navUserName').textContent = '@' + name;
+                document.getElementById('popupUserName').textContent = '@' + name;
+                document.getElementById('popupUserEmail').textContent = email;
+            }
+        });
+    </script>
+    <script>
         // Settings tabs
         const settingsTabs = document.querySelectorAll('.settings-tab');
         const settingsPanels = document.querySelectorAll('.settings-panel');
@@ -624,6 +376,97 @@
                     localStorage.setItem('enam-theme', 'system');
                 }
             });
+        });
+
+        // Copy buttons
+        document.querySelectorAll('.field-copy-btn[data-target]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const targetId = btn.dataset.target;
+                const el = document.getElementById(targetId);
+                if (!el) return;
+                const text = el.textContent.trim();
+                try {
+                    await navigator.clipboard.writeText(text);
+                    showToast('Copied to clipboard', 'fa-copy');
+                } catch {
+                    showToast('Copy failed', 'fa-circle-exclamation');
+                }
+            });
+        });
+
+        // ========== MODALS ==========
+        function showToast(message, icon = 'fa-check') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<i class="fas ${icon} toast-icon"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.add('out'); toast.addEventListener('animationend', () => toast.remove()); }, 3000);
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('open');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('open');
+        }
+
+        // Close modal on overlay click / close buttons
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) overlay.classList.remove('open');
+            });
+        });
+        document.querySelectorAll('[data-modal]').forEach(el => {
+            el.addEventListener('click', () => {
+                closeModal(el.dataset.modal);
+            });
+        });
+
+        // Change password
+        document.getElementById('btnChangePassword').addEventListener('click', () => openModal('modalChangePassword'));
+        document.getElementById('cpSave').addEventListener('click', () => {
+            const current = document.getElementById('cpCurrent').value.trim();
+            const next = document.getElementById('cpNew').value.trim();
+            const confirm = document.getElementById('cpConfirm').value.trim();
+            if (!current || !next || !confirm) {
+                showToast('Please fill in all fields.', 'fa-circle-exclamation');
+                return;
+            }
+            if (next !== confirm) {
+                showToast('New passwords do not match.', 'fa-circle-exclamation');
+                return;
+            }
+            if (next.length < 6) {
+                showToast('Password must be at least 6 characters.', 'fa-circle-exclamation');
+                return;
+            }
+            closeModal('modalChangePassword');
+            document.getElementById('cpCurrent').value = '';
+            document.getElementById('cpNew').value = '';
+            document.getElementById('cpConfirm').value = '';
+            showToast('Password updated successfully.', 'fa-check');
+        });
+
+        // 2FA
+        document.getElementById('btnEnable2FA').addEventListener('click', () => openModal('modalEnable2FA'));
+        document.getElementById('tfaVerify').addEventListener('click', () => {
+            const code = document.getElementById('tfaCode').value.trim();
+            if (code.length !== 6 || !/^\d{6}$/.test(code)) {
+                showToast('Enter a valid 6-digit code.', 'fa-circle-exclamation');
+                return;
+            }
+            closeModal('modalEnable2FA');
+            document.getElementById('tfaCode').value = '';
+            showToast('Two-factor authentication enabled.', 'fa-shield-halved');
+        });
+
+        // Sign out all
+        document.getElementById('btnSignOutAll').addEventListener('click', () => openModal('modalSignOutAll'));
+        document.getElementById('soaConfirm').addEventListener('click', () => {
+            closeModal('modalSignOutAll');
+            showToast('All other sessions have been signed out.', 'fa-arrow-right-from-bracket');
         });
     </script>
 </body>

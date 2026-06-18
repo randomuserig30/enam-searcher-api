@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <script>(function(){var t=localStorage.getItem('enam-theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light')}else if(t==='system'){if(!window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','light')}}})();</script>
+    <title>Enam Searcher - Choose Username</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="login-body">
+
+    <div class="login-bg"></div>
+
+    <div class="login-wrap" style="grid-template-columns:1fr;max-width:420px;gap:0;">
+        <div class="login-right" style="justify-content:center;">
+            <div class="login-card" style="max-width:380px;width:100%;">
+                <div style="text-align:center;margin-bottom:24px;">
+                    <div style="width:48px;height:48px;border-radius:var(--radius);background:var(--bg-hover);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;border:1px solid var(--border);">
+                        <i class="fas fa-user-tag" style="font-size:1.2rem;color:var(--text-primary);"></i>
+                    </div>
+                    <h2 style="font-size:1.3rem;font-weight:700;margin-bottom:6px;">Choose your username</h2>
+                    <p style="font-size:0.85rem;color:var(--text-secondary);">This will be displayed across the platform.</p>
+                </div>
+
+                <form id="setupForm" style="display:flex;flex-direction:column;gap:18px;">
+                    <div class="login-field">
+                        <label>Username</label>
+                        <div style="display:flex;align-items:center;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-xs);padding:0 14px;transition:all var(--transition-fast);" id="usernameWrap">
+                            <span style="color:var(--text-muted);font-size:0.9rem;font-weight:600;">@</span>
+                            <input type="text" id="usernameInput" placeholder="myuser" required maxlength="20" style="background:transparent;border:none;flex:1;padding:10px 8px;color:var(--text-primary);font-size:0.9rem;font-family:inherit;outline:none;">
+                        </div>
+                        <p style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;">Letters, numbers, and underscores only.</p>
+                    </div>
+                    <button type="submit" class="login-submit">Continue <i class="fas fa-arrow-right"></i></button>
+                </form>
+
+                <div class="login-msg" id="setupMsg"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { auth } from "./firebase-config.js";
+        import { setUsername } from "./auth.js";
+
+        const setupForm = document.getElementById("setupForm");
+        const usernameInput = document.getElementById("usernameInput");
+        const usernameWrap = document.getElementById("usernameWrap");
+        const setupMsg = document.getElementById("setupMsg");
+        const msg = document.getElementById("setupMsg");
+
+        function showMsg(text, isError) {
+            msg.textContent = text;
+            msg.className = "login-msg " + (isError ? "error" : "success");
+        }
+
+        // Auth guard — only accessible when logged in and no displayName yet
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.replace("index.html");
+            } else if (user.displayName) {
+                window.location.replace("dashboard.html");
+            }
+        });
+
+        usernameInput.addEventListener("focus", () => {
+            usernameWrap.style.borderColor = "var(--border-focus)";
+            usernameWrap.style.background = "var(--bg-hover)";
+        });
+        usernameInput.addEventListener("blur", () => {
+            usernameWrap.style.borderColor = "var(--border)";
+            usernameWrap.style.background = "var(--bg-input)";
+        });
+
+        setupForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const raw = usernameInput.value.trim();
+            const username = raw.replace(/^@/, "");
+
+            if (!username) {
+                showMsg("Please enter a username.", true);
+                return;
+            }
+            if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                showMsg("Only letters, numbers, and underscores allowed.", true);
+                return;
+            }
+            if (username.length < 3 || username.length > 20) {
+                showMsg("Username must be 3-20 characters.", true);
+                return;
+            }
+
+            try {
+                await setUsername(auth.currentUser, username);
+                window.location.replace("dashboard.html");
+            } catch (err) {
+                showMsg(err.message || "Could not set username. Try again.", true);
+            }
+        });
+    </script>
+</body>
+</html>

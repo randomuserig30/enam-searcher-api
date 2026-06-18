@@ -1,8 +1,4 @@
 // ========== DOM ==========
-const sidebar = document.getElementById('sidebar');
-const searchesToggle = document.getElementById('searchesToggle');
-const searchesSub = document.getElementById('searchesSub');
-const collapseBtn = document.getElementById('collapseBtn');
 const clearAllBtn = document.getElementById('clearAllBtn');
 const searchBtn = document.getElementById('searchBtn');
 const resultsArea = document.getElementById('resultsArea');
@@ -10,22 +6,6 @@ const resultsArea = document.getElementById('resultsArea');
 function escapeHtml(str) {
     if (!str) return '';
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
-// ========== SIDEBAR: Searches submenu toggle ==========
-if (searchesToggle) {
-    searchesToggle.addEventListener('click', () => {
-        searchesToggle.classList.toggle('open');
-        searchesSub.classList.toggle('open');
-    });
-}
-
-// ========== SIDEBAR: Collapse ==========
-if (collapseBtn) {
-    collapseBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        sidebar.classList.toggle('collapsed');
-    });
 }
 
 // ========== CATEGORY TABS ==========
@@ -71,9 +51,9 @@ if (clearAllBtn) {
         });
         resultsArea.innerHTML = `
             <div class="results-empty">
-                <i class="fas fa-rocket"></i>
-                <h3>Run a breach lookup.</h3>
-                <p>Fill at least one field. Combine multiple fields with AND &mdash; every record must match all of them.</p>
+                <i class="fas fa-magnifying-glass-chart"></i>
+                <h3>Ready to search</h3>
+                <p>Fill at least one field above, then hit <strong>Search</strong>.<br>Combine multiple fields with AND &mdash; every record must match all of them.</p>
             </div>
         `;
     });
@@ -203,12 +183,28 @@ if (searchBtn) {
             return;
         }
 
-        // Show loading
+        // Show skeleton loading
         const fileLabel = localFileCount > 0 ? `${localFileCount} file${localFileCount !== 1 ? 's' : ''}` : 'local data';
         resultsArea.innerHTML = `
-            <div class="results-empty">
-                <div class="search-loader"></div>
-                <h3>Searching ${fileLabel}...</h3>
+            <div class="search-status">
+                <span class="search-status-dot"></span>
+                <span class="search-status-text">Searching ${fileLabel}...</span>
+            </div>
+            <div class="result-list">
+                <div class="skeleton skeleton-title"></div>
+                <div class="skeleton skeleton-text medium"></div>
+                <div class="skeleton-row">
+                    <div class="skeleton skeleton-avatar"></div>
+                    <div class="skeleton skeleton-block"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton skeleton-avatar"></div>
+                    <div class="skeleton skeleton-block"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton skeleton-avatar"></div>
+                    <div class="skeleton skeleton-block"></div>
+                </div>
             </div>
         `;
 
@@ -263,15 +259,15 @@ if (searchBtn) {
                     plainText += `Source: ${r.source}\nOffset: ${r.offset}\n\n`;
                 });
 
-                let html = `<div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;"><span style="font-size:0.88rem;color:var(--text-secondary);"><strong style="color:var(--text-primary);">16 results</strong> found in ${time}s</span><div class="results-actions"><button class="results-action-btn" id="copyAllBtn"><i class="fas fa-copy"></i> Copy all</button><button class="results-action-btn" id="downloadTxtBtn"><i class="fas fa-download"></i> Download .txt</button></div></div>`;
+                let html = `<div class="result-header-bar"><span class="result-count"><strong>16 results</strong> found in ${time}s</span><div class="results-actions"><button class="results-action-btn" id="copyAllBtn"><i class="fas fa-copy"></i> Copy all</button><button class="results-action-btn" id="downloadTxtBtn"><i class="fas fa-download"></i> Download .txt</button></div></div>`;
 
                 catherineRecords.forEach(r => {
-                    html += `<div style="padding:18px 24px;border-bottom:1px solid var(--border);">`;
-                    html += `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;"><span style="font-weight:700;font-size:0.92rem;display:flex;align-items:center;gap:8px;"><i class="fas fa-database" style="color:var(--text-muted);"></i> ${r.title}</span><span style="font-size:0.72rem;color:var(--text-muted);font-family:monospace;">Offset: ${r.offset}</span></div>`;
-                    html += `<div style="margin-bottom:10px;font-size:0.8rem;color:var(--text-muted);"><i class="fas fa-bookmark" style="margin-right:4px;"></i> ${r.source}</div>`;
-                    html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:6px;">`;
+                    html += `<div class="result-record">`;
+                    html += `<div class="result-record-header"><span class="result-record-title"><i class="fas fa-database"></i> ${r.title}</span><span class="result-record-offset">Offset: ${r.offset}</span></div>`;
+                    html += `<div class="result-record-source"><i class="fas fa-bookmark"></i> ${r.source}</div>`;
+                    html += `<div class="result-fields">`;
                     r.fields.forEach(([k, v]) => {
-                        html += `<div class="field-row" style="display:flex;align-items:center;gap:6px;font-size:0.82rem;padding:5px 8px;background:rgba(255,255,255,0.02);border-radius:4px;"><span style="color:var(--text-muted);font-weight:500;white-space:nowrap;">${k}:</span><span style="color:var(--text-primary);font-family:monospace;">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
+                        html += `<div class="result-field"><span class="result-field-label">${k}:</span><span class="result-field-value">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
                     });
                     html += `</div></div>`;
                 });
@@ -324,24 +320,24 @@ if (searchBtn) {
                     plainText += '\n';
                 });
 
-                let html = `<div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;"><span style="font-size:0.88rem;color:var(--text-secondary);"><strong style="color:var(--text-primary);">27 results</strong> found in ${time}s</span><div class="results-actions"><button class="results-action-btn" id="copyAllBtn"><i class="fas fa-copy"></i> Copy all</button><button class="results-action-btn" id="downloadTxtBtn"><i class="fas fa-download"></i> Download .txt</button></div></div>`;
+                let html = `<div class="result-header-bar"><span class="result-count"><strong>27 results</strong> found in ${time}s</span><div class="results-actions"><button class="results-action-btn" id="copyAllBtn"><i class="fas fa-copy"></i> Copy all</button><button class="results-action-btn" id="downloadTxtBtn"><i class="fas fa-download"></i> Download .txt</button></div></div>`;
 
                 jordanRecords.forEach(r => {
-                    html += `<div style="padding:18px 24px;border-bottom:1px solid var(--border);">`;
-                    html += `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;"><span style="font-weight:700;font-size:0.92rem;display:flex;align-items:center;gap:8px;"><i class="fas fa-database" style="color:var(--text-muted);"></i> ${r.title}</span><span style="font-size:0.72rem;color:var(--text-muted);font-family:monospace;">Offset: ${r.offset}</span></div>`;
-                    html += `<div style="margin-bottom:10px;font-size:0.8rem;color:var(--text-muted);"><i class="fas fa-bookmark" style="margin-right:4px;"></i> ${r.source}</div>`;
-                    html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;">`;
+                    html += `<div class="result-record">`;
+                    html += `<div class="result-record-header"><span class="result-record-title"><i class="fas fa-database"></i> ${r.title}</span><span class="result-record-offset">Offset: ${r.offset}</span></div>`;
+                    html += `<div class="result-record-source"><i class="fas fa-bookmark"></i> ${r.source}</div>`;
+                    html += `<div class="result-fields">`;
                     r.fields.forEach(([k, v]) => {
-                        html += `<div class="field-row" style="display:flex;align-items:center;gap:6px;font-size:0.82rem;padding:5px 8px;background:rgba(255,255,255,0.02);border-radius:4px;"><span style="color:var(--text-muted);font-weight:500;white-space:nowrap;">${k}:</span><span style="color:var(--text-primary);font-family:monospace;">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
+                        html += `<div class="result-field"><span class="result-field-label">${k}:</span><span class="result-field-value">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
                     });
                     html += `</div>`;
                     if (r.sub) {
                         r.sub.forEach(s => {
-                            html += `<div style="margin-top:12px;margin-left:16px;padding:12px 16px;border-left:2px solid var(--border);background:rgba(255,255,255,0.01);border-radius:0 6px 6px 0;">`;
-                            html += `<div style="font-size:0.8rem;font-weight:700;color:var(--text-secondary);margin-bottom:8px;">--- ${s.label} ---</div>`;
-                            html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;">`;
+                            html += `<div class="result-sub">`;
+                            html += `<div class="result-sub-label">--- ${s.label} ---</div>`;
+                            html += `<div class="result-fields">`;
                             s.fields.forEach(([k, v]) => {
-                                html += `<div class="field-row" style="display:flex;align-items:center;gap:6px;font-size:0.82rem;padding:5px 8px;background:rgba(255,255,255,0.02);border-radius:4px;"><span style="color:var(--text-muted);font-weight:500;white-space:nowrap;">${k}:</span><span style="color:var(--text-primary);font-family:monospace;">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
+                                html += `<div class="result-field"><span class="result-field-label">${k}:</span><span class="result-field-value">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
                             });
                             html += `</div></div>`;
                         });
@@ -395,24 +391,24 @@ if (searchBtn) {
                     plainText += '\n';
                 });
 
-                let html = `<div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;"><span style="font-size:0.88rem;color:var(--text-secondary);"><strong style="color:var(--text-primary);">6 results</strong> found in ${time}s</span><div class="results-actions"><button class="results-action-btn" id="copyAllBtn"><i class="fas fa-copy"></i> Copy all</button><button class="results-action-btn" id="downloadTxtBtn"><i class="fas fa-download"></i> Download .txt</button></div></div>`;
+                let html = `<div class="result-header-bar"><span class="result-count"><strong>6 results</strong> found in ${time}s</span><div class="results-actions"><button class="results-action-btn" id="copyAllBtn"><i class="fas fa-copy"></i> Copy all</button><button class="results-action-btn" id="downloadTxtBtn"><i class="fas fa-download"></i> Download .txt</button></div></div>`;
 
                 julianoRecords.forEach(r => {
-                    html += `<div style="padding:18px 24px;border-bottom:1px solid var(--border);">`;
-                    html += `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;"><span style="font-weight:700;font-size:0.92rem;display:flex;align-items:center;gap:8px;"><i class="fas fa-database" style="color:var(--text-muted);"></i> ${r.title}</span><span style="font-size:0.72rem;color:var(--text-muted);font-family:monospace;">Offset: ${r.offset}</span></div>`;
-                    html += `<div style="margin-bottom:10px;font-size:0.8rem;color:var(--text-muted);"><i class="fas fa-bookmark" style="margin-right:4px;"></i> ${r.source}</div>`;
-                    html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;">`;
+                    html += `<div class="result-record">`;
+                    html += `<div class="result-record-header"><span class="result-record-title"><i class="fas fa-database"></i> ${r.title}</span><span class="result-record-offset">Offset: ${r.offset}</span></div>`;
+                    html += `<div class="result-record-source"><i class="fas fa-bookmark"></i> ${r.source}</div>`;
+                    html += `<div class="result-fields">`;
                     r.fields.forEach(([k, v]) => {
-                        html += `<div class="field-row" style="display:flex;align-items:center;gap:6px;font-size:0.82rem;padding:5px 8px;background:rgba(255,255,255,0.02);border-radius:4px;"><span style="color:var(--text-muted);font-weight:500;white-space:nowrap;">${k}:</span><span style="color:var(--text-primary);font-family:monospace;">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
+                        html += `<div class="result-field"><span class="result-field-label">${k}:</span><span class="result-field-value">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
                     });
                     html += `</div>`;
                     if (r.sub) {
                         r.sub.forEach(s => {
-                            html += `<div style="margin-top:12px;margin-left:16px;padding:12px 16px;border-left:2px solid var(--border);background:rgba(255,255,255,0.01);border-radius:0 6px 6px 0;">`;
-                            html += `<div style="font-size:0.8rem;font-weight:700;color:var(--text-secondary);margin-bottom:8px;">--- ${s.label} ---</div>`;
-                            html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;">`;
+                            html += `<div class="result-sub">`;
+                            html += `<div class="result-sub-label">--- ${s.label} ---</div>`;
+                            html += `<div class="result-fields">`;
                             s.fields.forEach(([k, v]) => {
-                                html += `<div class="field-row" style="display:flex;align-items:center;gap:6px;font-size:0.82rem;padding:5px 8px;background:rgba(255,255,255,0.02);border-radius:4px;"><span style="color:var(--text-muted);font-weight:500;white-space:nowrap;">${k}:</span><span style="color:var(--text-primary);font-family:monospace;">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
+                                html += `<div class="result-field"><span class="result-field-label">${k}:</span><span class="result-field-value">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
                             });
                             html += `</div></div>`;
                         });
@@ -466,9 +462,9 @@ if (searchBtn) {
                 });
 
                 let html = `
-                    <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-                        <span style="font-size:0.88rem;color:var(--text-secondary);">
-                            <strong style="color:var(--text-primary);">1 result</strong> found in ${time}s
+                    <div class="result-header-bar">
+                        <span class="result-count">
+                            <strong>1 result</strong> found in ${time}s
                         </span>
                         <div class="results-actions">
                             <button class="results-action-btn" id="copyAllBtn"><i class="fas fa-copy"></i> Copy all</button>
@@ -478,24 +474,24 @@ if (searchBtn) {
                 `;
 
                 vincentRecords.forEach(r => {
-                    html += `<div style="padding:18px 24px;border-bottom:1px solid var(--border);">`;
-                    html += `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">`;
-                    html += `<span style="font-weight:700;font-size:0.92rem;display:flex;align-items:center;gap:8px;"><i class="fas fa-database" style="color:var(--text-muted);"></i> ${r.title}</span>`;
-                    html += `<span style="font-size:0.72rem;color:var(--text-muted);font-family:monospace;">Offset: ${r.offset}</span>`;
+                    html += `<div class="result-record">`;
+                    html += `<div class="result-record-header">`;
+                    html += `<span class="result-record-title"><i class="fas fa-database"></i> ${r.title}</span>`;
+                    html += `<span class="result-record-offset">Offset: ${r.offset}</span>`;
                     html += `</div>`;
-                    html += `<div style="margin-bottom:10px;font-size:0.8rem;color:var(--text-muted);"><i class="fas fa-bookmark" style="margin-right:4px;"></i> ${r.source}</div>`;
-                    html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;">`;
+                    html += `<div class="result-record-source"><i class="fas fa-bookmark"></i> ${r.source}</div>`;
+                    html += `<div class="result-fields">`;
                     r.fields.forEach(([k, v]) => {
-                        html += `<div class="field-row" style="display:flex;align-items:center;gap:6px;font-size:0.82rem;padding:5px 8px;background:rgba(255,255,255,0.02);border-radius:4px;"><span style="color:var(--text-muted);font-weight:500;white-space:nowrap;">${k}:</span><span style="color:var(--text-primary);font-family:monospace;">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
+                        html += `<div class="result-field"><span class="result-field-label">${k}:</span><span class="result-field-value">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
                     });
                     html += `</div>`;
                     if (r.sub) {
                         r.sub.forEach(s => {
-                            html += `<div style="margin-top:12px;margin-left:16px;padding:12px 16px;border-left:2px solid var(--border);background:rgba(255,255,255,0.01);border-radius:0 6px 6px 0;">`;
-                            html += `<div style="font-size:0.8rem;font-weight:700;color:var(--text-secondary);margin-bottom:8px;">--- ${s.label} ---</div>`;
-                            html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;">`;
+                            html += `<div class="result-sub">`;
+                            html += `<div class="result-sub-label">--- ${s.label} ---</div>`;
+                            html += `<div class="result-fields">`;
                             s.fields.forEach(([k, v]) => {
-                                html += `<div class="field-row" style="display:flex;align-items:center;gap:6px;font-size:0.82rem;padding:5px 8px;background:rgba(255,255,255,0.02);border-radius:4px;"><span style="color:var(--text-muted);font-weight:500;white-space:nowrap;">${k}:</span><span style="color:var(--text-primary);font-family:monospace;">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
+                                html += `<div class="result-field"><span class="result-field-label">${k}:</span><span class="result-field-value">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
                             });
                             html += `</div></div>`;
                         });
@@ -651,9 +647,9 @@ if (searchBtn) {
                 });
 
                 let html = `
-                    <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-                        <span style="font-size:0.88rem;color:var(--text-secondary);">
-                            <strong style="color:var(--text-primary);">6 results</strong> found in ${time}s
+                    <div class="result-header-bar">
+                        <span class="result-count">
+                            <strong>6 results</strong> found in ${time}s
                         </span>
                         <div class="results-actions">
                             <button class="results-action-btn" id="copyAllBtn"><i class="fas fa-copy"></i> Copy all</button>
@@ -663,24 +659,22 @@ if (searchBtn) {
                 `;
 
                 rayanRecords.forEach(r => {
-                    html += `<div style="padding:18px 24px;border-bottom:1px solid var(--border);">`;
-                    html += `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">`;
-                    html += `<span style="font-weight:700;font-size:0.92rem;display:flex;align-items:center;gap:8px;">
-                        <i class="fas fa-database" style="color:var(--text-muted);"></i> ${r.title}
+                    html += `<div class="result-record">`;
+                    html += `<div class="result-record-header">`;
+                    html += `<span class="result-record-title">
+                        <i class="fas fa-database"></i> ${r.title}
                     </span>
-                    <span style="font-size:0.72rem;color:var(--text-muted);font-family:monospace;">Offset: ${r.offset}</span>`;
+                    <span class="result-record-offset">Offset: ${r.offset}</span>`;
                     html += `</div>`;
 
-                    html += `<div style="margin-bottom:10px;font-size:0.8rem;color:var(--text-muted);">
-                        <i class="fas fa-bookmark" style="margin-right:4px;"></i> ${r.source}
-                    </div>`;
+                    html += `<div class="result-record-source"><i class="fas fa-bookmark"></i> ${r.source}</div>`;
 
-                    html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;">`;
+                    html += `<div class="result-fields">`;
                     r.fields.forEach(([k, v]) => {
                         html += `
-                            <div class="field-row" style="display:flex;align-items:center;gap:6px;font-size:0.82rem;padding:5px 8px;background:rgba(255,255,255,0.02);border-radius:4px;">
-                                <span style="color:var(--text-muted);font-weight:500;white-space:nowrap;">${k}:</span>
-                                <span style="color:var(--text-primary);font-family:monospace;">${v}</span>
+                            <div class="result-field">
+                                <span class="result-field-label">${k}:</span>
+                                <span class="result-field-value">${v}</span>
                                 <button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button>
                             </div>
                         `;
@@ -689,14 +683,14 @@ if (searchBtn) {
 
                     if (r.sub) {
                         r.sub.forEach(s => {
-                            html += `<div style="margin-top:12px;margin-left:16px;padding:12px 16px;border-left:2px solid var(--border);background:rgba(255,255,255,0.01);border-radius:0 6px 6px 0;">`;
-                            html += `<div style="font-size:0.8rem;font-weight:700;color:var(--text-secondary);margin-bottom:8px;">--- ${s.label} ---</div>`;
-                            html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;">`;
+                            html += `<div class="result-sub">`;
+                            html += `<div class="result-sub-label">--- ${s.label} ---</div>`;
+                            html += `<div class="result-fields">`;
                             s.fields.forEach(([k, v]) => {
                                 html += `
-                                    <div class="field-row" style="display:flex;align-items:center;gap:6px;font-size:0.82rem;padding:5px 8px;background:rgba(255,255,255,0.02);border-radius:4px;">
-                                        <span style="color:var(--text-muted);font-weight:500;white-space:nowrap;">${k}:</span>
-                                        <span style="color:var(--text-primary);font-family:monospace;">${v}</span>
+                                    <div class="result-field">
+                                        <span class="result-field-label">${k}:</span>
+                                        <span class="result-field-value">${v}</span>
                                         <button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button>
                                     </div>
                                 `;
@@ -864,9 +858,9 @@ if (searchBtn) {
                 });
 
                 let html = `
-                    <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-                        <span style="font-size:0.88rem;color:var(--text-secondary);">
-                            <strong style="color:var(--text-primary);">6 results</strong> found in ${time}s
+                    <div class="result-header-bar">
+                        <span class="result-count">
+                            <strong>6 results</strong> found in ${time}s
                         </span>
                         <div class="results-actions">
                             <button class="results-action-btn" id="copyAllBtn"><i class="fas fa-copy"></i> Copy all</button>
@@ -876,24 +870,24 @@ if (searchBtn) {
                 `;
 
                 mathisRecords.forEach(r => {
-                    html += `<div style="padding:18px 24px;border-bottom:1px solid var(--border);">`;
-                    html += `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">`;
-                    html += `<span style="font-weight:700;font-size:0.92rem;display:flex;align-items:center;gap:8px;"><i class="fas fa-database" style="color:var(--text-muted);"></i> ${r.title}</span>`;
-                    html += `<span style="font-size:0.72rem;color:var(--text-muted);font-family:monospace;">Offset: ${r.offset}</span>`;
+                    html += `<div class="result-record">`;
+                    html += `<div class="result-record-header">`;
+                    html += `<span class="result-record-title"><i class="fas fa-database"></i> ${r.title}</span>`;
+                    html += `<span class="result-record-offset">Offset: ${r.offset}</span>`;
                     html += `</div>`;
-                    html += `<div style="margin-bottom:10px;font-size:0.8rem;color:var(--text-muted);"><i class="fas fa-bookmark" style="margin-right:4px;"></i> ${r.source}</div>`;
-                    html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;">`;
+                    html += `<div class="result-record-source"><i class="fas fa-bookmark"></i> ${r.source}</div>`;
+                    html += `<div class="result-fields">`;
                     r.fields.forEach(([k, v]) => {
-                        html += `<div class="field-row" style="display:flex;align-items:center;gap:6px;font-size:0.82rem;padding:5px 8px;background:rgba(255,255,255,0.02);border-radius:4px;"><span style="color:var(--text-muted);font-weight:500;white-space:nowrap;">${k}:</span><span style="color:var(--text-primary);font-family:monospace;">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
+                        html += `<div class="result-field"><span class="result-field-label">${k}:</span><span class="result-field-value">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
                     });
                     html += `</div>`;
                     if (r.sub) {
                         r.sub.forEach(s => {
-                            html += `<div style="margin-top:12px;margin-left:16px;padding:12px 16px;border-left:2px solid var(--border);background:rgba(255,255,255,0.01);border-radius:0 6px 6px 0;">`;
-                            html += `<div style="font-size:0.8rem;font-weight:700;color:var(--text-secondary);margin-bottom:8px;">--- ${s.label} ---</div>`;
-                            html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;">`;
+                            html += `<div class="result-sub">`;
+                            html += `<div class="result-sub-label">--- ${s.label} ---</div>`;
+                            html += `<div class="result-fields">`;
                             s.fields.forEach(([k, v]) => {
-                                html += `<div class="field-row" style="display:flex;align-items:center;gap:6px;font-size:0.82rem;padding:5px 8px;background:rgba(255,255,255,0.02);border-radius:4px;"><span style="color:var(--text-muted);font-weight:500;white-space:nowrap;">${k}:</span><span style="color:var(--text-primary);font-family:monospace;">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
+                                html += `<div class="result-field"><span class="result-field-label">${k}:</span><span class="result-field-value">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
                             });
                             html += `</div></div>`;
                         });
@@ -1070,9 +1064,9 @@ if (searchBtn) {
                 });
 
                 let html = `
-                    <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-                        <span style="font-size:0.88rem;color:var(--text-secondary);">
-                            <strong style="color:var(--text-primary);">9 results</strong> found in ${time}s
+                    <div class="result-header-bar">
+                        <span class="result-count">
+                            <strong>9 results</strong> found in ${time}s
                         </span>
                         <div class="results-actions">
                             <button class="results-action-btn" id="copyAllBtn"><i class="fas fa-copy"></i> Copy all</button>
@@ -1082,24 +1076,24 @@ if (searchBtn) {
                 `;
 
                 raphaelRecords.forEach(r => {
-                    html += `<div style="padding:18px 24px;border-bottom:1px solid var(--border);">`;
-                    html += `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">`;
-                    html += `<span style="font-weight:700;font-size:0.92rem;display:flex;align-items:center;gap:8px;"><i class="fas fa-database" style="color:var(--text-muted);"></i> ${r.title}</span>`;
-                    html += `<span style="font-size:0.72rem;color:var(--text-muted);font-family:monospace;">Offset: ${r.offset}</span>`;
+                    html += `<div class="result-record">`;
+                    html += `<div class="result-record-header">`;
+                    html += `<span class="result-record-title"><i class="fas fa-database"></i> ${r.title}</span>`;
+                    html += `<span class="result-record-offset">Offset: ${r.offset}</span>`;
                     html += `</div>`;
-                    html += `<div style="margin-bottom:10px;font-size:0.8rem;color:var(--text-muted);"><i class="fas fa-bookmark" style="margin-right:4px;"></i> ${r.source}</div>`;
-                    html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;">`;
+                    html += `<div class="result-record-source"><i class="fas fa-bookmark"></i> ${r.source}</div>`;
+                    html += `<div class="result-fields">`;
                     r.fields.forEach(([k, v]) => {
-                        html += `<div class="field-row" style="display:flex;align-items:center;gap:6px;font-size:0.82rem;padding:5px 8px;background:rgba(255,255,255,0.02);border-radius:4px;"><span style="color:var(--text-muted);font-weight:500;white-space:nowrap;">${k}:</span><span style="color:var(--text-primary);font-family:monospace;">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
+                        html += `<div class="result-field"><span class="result-field-label">${k}:</span><span class="result-field-value">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
                     });
                     html += `</div>`;
                     if (r.sub) {
                         r.sub.forEach(s => {
-                            html += `<div style="margin-top:12px;margin-left:16px;padding:12px 16px;border-left:2px solid var(--border);background:rgba(255,255,255,0.01);border-radius:0 6px 6px 0;">`;
-                            html += `<div style="font-size:0.8rem;font-weight:700;color:var(--text-secondary);margin-bottom:8px;">--- ${s.label} ---</div>`;
-                            html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;">`;
+                            html += `<div class="result-sub">`;
+                            html += `<div class="result-sub-label">--- ${s.label} ---</div>`;
+                            html += `<div class="result-fields">`;
                             s.fields.forEach(([k, v]) => {
-                                html += `<div class="field-row" style="display:flex;align-items:center;gap:6px;font-size:0.82rem;padding:5px 8px;background:rgba(255,255,255,0.02);border-radius:4px;"><span style="color:var(--text-muted);font-weight:500;white-space:nowrap;">${k}:</span><span style="color:var(--text-primary);font-family:monospace;">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
+                                html += `<div class="result-field"><span class="result-field-label">${k}:</span><span class="result-field-value">${v}</span><button class="field-copy-btn" data-value="${v}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
                             });
                             html += `</div></div>`;
                         });
@@ -1186,9 +1180,9 @@ if (searchBtn) {
 
                 if (totalCount > 0) {
                     let html = `
-                        <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-                            <span style="font-size:0.88rem;color:var(--text-secondary);">
-                                <strong style="color:var(--text-primary);">${totalCount} result${totalCount !== 1 ? 's' : ''}</strong> found in ${totalTime}s
+                        <div class="result-header-bar">
+                            <span class="result-count">
+                                <strong>${totalCount} result${totalCount !== 1 ? 's' : ''}</strong> found in ${totalTime}s
                             </span>
                             <div class="results-actions">
                                 <button class="results-action-btn" id="copyAllBtn"><i class="fas fa-copy"></i> Copy all</button>
@@ -1197,7 +1191,7 @@ if (searchBtn) {
                         </div>
                     `;
 
-                    html += `<div style="display:flex;flex-direction:column;gap:12px;padding:18px 24px;">`;
+                    html += `<div class="result-list">`;
                     allRecords.forEach(rec => {
                         if (rec.type === 'local') {
                             const r = rec.data;
@@ -1205,13 +1199,13 @@ if (searchBtn) {
                             Object.entries(r).forEach(([k, v]) => { plainText += `${k}: ${v}\n`; });
                             plainText += '\n';
 
-                            html += `<div style="padding:12px 14px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--border);">`;
-                            html += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">`;
-                            html += `<span style="font-weight:600;font-size:0.85rem;color:var(--text-secondary);"><i class="fas fa-database" style="color:var(--text-muted);margin-right:6px;"></i>Record</span>`;
+                            html += `<div class="result-backend-card">`;
+                            html += `<div class="result-backend-header">`;
+                            html += `<span class="result-backend-title"><i class="fas fa-database"></i>Record</span>`;
                             html += `</div>`;
-                            html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:5px;">`;
+                            html += `<div class="result-fields">`;
                             Object.entries(r).forEach(([k, v]) => {
-                                html += `<div class="field-row" style="display:flex;align-items:center;gap:6px;font-size:0.82rem;padding:5px 8px;background:rgba(255,255,255,0.02);border-radius:4px;"><span style="color:var(--text-muted);font-weight:500;white-space:nowrap;">${k}:</span><span style="color:var(--text-primary);font-family:monospace;word-break:break-all;">${escapeHtml(v)}</span><button class="field-copy-btn" data-value="${escapeHtml(v)}" title="Copy"><i class="fas fa-copy" style="font-size:0.7rem;"></i></button></div>`;
+                                html += `<div class="result-field"><span class="result-field-label">${k}:</span><span class="result-field-value">${escapeHtml(v)}</span><button class="field-copy-btn" data-value="${escapeHtml(v)}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
                             });
                             html += `</div></div>`;
                         } else if (rec.type === 'brixhub') {
@@ -1224,17 +1218,17 @@ if (searchBtn) {
                             if (sources) plainText += `Sources: ${sources}\n`;
                             plainText += '\n';
 
-                            html += `<div style="padding:12px 14px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--border);">`;
-                            html += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">`;
-                            html += `<span style="font-weight:600;font-size:0.85rem;color:var(--text-secondary);"><i class="fas fa-database" style="color:var(--text-muted);margin-right:6px;"></i>Record</span>`;
+                            html += `<div class="result-backend-card">`;
+                            html += `<div class="result-backend-header">`;
+                            html += `<span class="result-backend-title"><i class="fas fa-database"></i>Record</span>`;
                             html += `</div>`;
-                            html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:5px;">`;
+                            html += `<div class="result-fields">`;
                             Object.entries(r).forEach(([k, v]) => {
                                 if (k.startsWith('_')) return;
-                                html += `<div class="field-row" style="display:flex;align-items:center;gap:6px;font-size:0.82rem;padding:5px 8px;background:rgba(255,255,255,0.02);border-radius:4px;"><span style="color:var(--text-muted);font-weight:500;white-space:nowrap;">${k}:</span><span style="color:var(--text-primary);font-family:monospace;word-break:break-all;">${escapeHtml(v)}</span><button class="field-copy-btn" data-value="${escapeHtml(v)}" title="Copy"><i class="fas fa-copy" style="font-size:0.7rem;"></i></button></div>`;
+                                html += `<div class="result-field"><span class="result-field-label">${k}:</span><span class="result-field-value">${escapeHtml(v)}</span><button class="field-copy-btn" data-value="${escapeHtml(v)}" title="Copy"><i class="fas fa-copy"></i></button></div>`;
                             });
                             if (sources) {
-                                html += `<div class="field-row" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;padding:5px 8px;background:rgba(255,255,255,0.02);border-radius:4px;grid-column:1/-1;"><span style="color:var(--text-muted);font-weight:500;white-space:nowrap;">Sources:</span><span style="color:var(--text-primary);">${escapeHtml(sources)}</span></div>`;
+                                html += `<div class="result-field"><span class="result-field-label">Sources:</span><span class="result-field-value">${escapeHtml(sources)}</span></div>`;
                             }
                             html += `</div></div>`;
                         }
@@ -1248,19 +1242,19 @@ if (searchBtn) {
                 } else if (localData?.filesSearched === 0) {
                     resultsArea.innerHTML = `
                         <div class="results-empty">
-                            <i class="fas fa-folder-open" style="font-size:2rem;color:var(--text-muted);margin-bottom:12px;"></i>
+                            <i class="fas fa-folder-open"></i>
                             <h3>No data files loaded</h3>
-                            <p style="color:var(--text-muted);font-size:0.88rem;margin-top:6px;">Add .txt or .jsonl files to the <code style="background:rgba(139,92,246,0.08);padding:2px 6px;border-radius:3px;">data/</code> folder and restart the backend.</p>
+                            <p>Add .txt or .jsonl files to the <code>data/</code> folder and restart the backend.</p>
                         </div>
                     `;
                 } else {
                     const timeTaken = ((localTookMs || 10) / 1000).toFixed(2);
                     resultsArea.innerHTML = `
                         <div class="results-empty">
-                            <i class="fas fa-circle-xmark" style="font-size:2rem;color:var(--text-muted);margin-bottom:12px;"></i>
+                            <i class="fas fa-circle-xmark"></i>
                             <h3>No matches found</h3>
-                            <p style="color:var(--text-muted);font-size:0.88rem;margin-top:6px;">Searched in ${timeTaken}s — no records matched your query.</p>
-                            <p style="color:var(--text-muted);font-size:0.82rem;margin-top:10px;">Try different keywords.</p>
+                            <p>Searched in ${timeTaken}s — no records matched your query.</p>
+                            <p>Try different keywords.</p>
                         </div>
                     `;
                 }
@@ -1269,10 +1263,10 @@ if (searchBtn) {
                 console.error('[FRONTEND] Search error:', err);
                 resultsArea.innerHTML = `
                     <div class="results-empty">
-                        <i class="fas fa-triangle-exclamation" style="font-size:2rem;color:var(--text-muted);margin-bottom:12px;"></i>
+                        <i class="fas fa-triangle-exclamation"></i>
                         <h3>Backend unreachable</h3>
-                        <p style="color:var(--text-muted);font-size:0.88rem;margin-top:6px;">Could not connect to localhost:3000.</p>
-                        <p style="color:var(--text-muted);font-size:0.82rem;margin-top:10px;">Make sure you ran <code>node server.js</code> in the project folder.</p>
+                        <p>Could not connect to localhost:3000.</p>
+                        <p>Make sure you ran <code>node server.js</code> in the project folder.</p>
                     </div>
                 `;
                 return;
@@ -1282,20 +1276,33 @@ if (searchBtn) {
     });
 }
 
+// ========== TOAST ==========
+function showToast(message, icon = 'fa-check') {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<i class="fas ${icon} toast-icon"></i> <span>${message}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => { toast.classList.add('out'); toast.addEventListener('animationend', () => toast.remove()); }, 3000);
+}
+
 // ========== USER POPUP ==========
-const sidebarUser = document.getElementById('sidebarUser');
+const navUser = document.getElementById('navUser');
 const userPopup = document.getElementById('userPopup');
 
-if (sidebarUser && userPopup) {
-    sidebarUser.addEventListener('click', (e) => {
+if (navUser && userPopup) {
+    navUser.addEventListener('click', (e) => {
         if (e.target.closest('.user-popup')) return;
         e.stopPropagation();
+        navUser.classList.toggle('open');
         userPopup.classList.toggle('open');
     });
 
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.sidebar-user')) {
+        if (!e.target.closest('.nav-user')) {
             userPopup.classList.remove('open');
+            navUser.classList.remove('open');
         }
     });
 }

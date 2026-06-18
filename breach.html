@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <script>(function(){var t=localStorage.getItem('enam-theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light')}else if(t==='system'){if(!window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','light')}}})();</script>
+    <title>Enam Searcher - Database Search Engine</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script type="module">
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { auth } from "./firebase-config.js";
+        onAuthStateChanged(auth, (user) => {
+            if (!user) { window.location.replace('index.html'); }
+        });
+    </script>
+</head>
+<body>
+
+    <!-- Top Navbar -->
+    <nav class="topnav">
+        <div class="topnav-inner">
+            <div class="nav-left">
+                <a href="dashboard.html" class="logo">
+                    <i class="fas fa-bolt"></i>
+                    <span>Enam<span class="logo-accent"> Searcher</span></span>
+                </a>
+            </div>
+            <div class="nav-center">
+                <a href="dashboard.html" class="nav-link"><i class="fas fa-th-large"></i> Dashboard</a>
+                <a href="breach.html" class="nav-link active"><i class="fas fa-shield-halved"></i> Breach</a>
+                <a href="discord.html" class="nav-link"><i class="fab fa-discord"></i> Discord</a>
+                <a href="#" class="nav-link disabled"><i class="far fa-bell"></i> Watchlist <span class="nav-badge">SOON</span></a>
+                <span class="nav-sep"></span>
+                <a href="docs.html" class="nav-link"><i class="fas fa-file-alt"></i> Docs</a>
+                <a href="support.html" class="nav-link"><i class="fas fa-headset"></i> Support</a>
+            </div>
+            <div class="nav-right">
+                <div class="nav-user" id="navUser">
+                    <div class="nav-user-avatar"><i class="fas fa-user"></i></div>
+                    <span class="nav-user-name" id="navUserName">@admin</span>
+                    <i class="fas fa-chevron-down nav-user-arrow"></i>
+                    <div class="user-popup" id="userPopup">
+                        <a href="settings.html" class="user-popup-item">
+                            <i class="fas fa-gear"></i> <span>Settings</span>
+                        </a>
+                        <button class="user-popup-item" id="logoutBtn" style="width:100%;font-family:inherit;">
+                            <i class="fas fa-arrow-right-from-bracket"></i> <span>Sign out</span>
+                        </button>
+                        <div class="user-popup-divider"></div>
+                        <div class="user-popup-profile">
+                            <div class="user-popup-profile-avatar"><i class="fas fa-user"></i></div>
+                            <div class="user-popup-profile-info">
+                                <span class="user-popup-profile-name" id="popupUserName">@admin</span>
+                                <span class="user-popup-profile-email" id="popupUserEmail">admin@enam.dev</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="breach-page">
+
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb">
+                <a href="dashboard.html">Dashboard</a>
+                <span class="breadcrumb-sep"><i class="fas fa-chevron-right"></i></span>
+                <a href="#">Searches</a>
+                <span class="breadcrumb-sep"><i class="fas fa-chevron-right"></i></span>
+                <span class="breadcrumb-current">Breach Data</span>
+            </nav>
+
+            <!-- Page Header -->
+            <div class="page-header-v2">
+                <div class="page-header-left">
+                    <div class="page-header-status">Live index</div>
+                    <h1 class="page-title">Breach Data</h1>
+                    <p class="page-subtitle">Cross-reference identity, addresses, contact and credentials across every leak we index.</p>
+                </div>
+                <div class="page-header-actions">
+                    <a href="docs.html" class="header-action-btn tooltip" data-tip="Read the docs"><i class="fas fa-book"></i></a>
+                    <a href="settings.html" class="header-action-btn tooltip" data-tip="Settings"><i class="fas fa-gear"></i></a>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-badge">
+                    <div class="stat-badge-icon"><i class="fas fa-database"></i></div>
+                    <strong>2.4B</strong> records
+                </div>
+                <div class="stat-badge">
+                    <div class="stat-badge-icon"><i class="fas fa-shield-halved"></i></div>
+                    <strong>482</strong> sources
+                </div>
+                <div class="stat-badge">
+                    <div class="stat-badge-icon"><i class="fas fa-bolt"></i></div>
+                    &lt; 200ms avg
+                </div>
+                <div class="chip">v3.1</div>
+            </div>
+
+            <!-- Search Form Card -->
+            <div class="breach-card">
+                <!-- Category Tabs -->
+                <div class="category-tabs">
+                    <button class="cat-tab active" data-cat="identity"><i class="fas fa-id-card"></i> Identity</button>
+                    <button class="cat-tab" data-cat="contact"><i class="fas fa-envelope"></i> Contact</button>
+                    <button class="cat-tab" data-cat="address"><i class="fas fa-location-dot"></i> Address</button>
+                    <button class="cat-tab" data-cat="birth"><i class="fas fa-cake-candles"></i> Birth</button>
+                    <button class="cat-tab" data-cat="financial"><i class="fas fa-credit-card"></i> Financial</button>
+                    <button class="cat-tab" data-cat="credentials"><i class="fas fa-key"></i> Credentials</button>
+                    <button class="cat-tab" data-cat="identifiers"><i class="fas fa-fingerprint"></i> Identifiers</button>
+                </div>
+
+                <!-- Identity Tab -->
+                <div class="tab-panel active" id="panel-identity">
+                    <div class="form-grid">
+                        <div class="field-group">
+                            <label class="field-label">FIRST NAME</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="prenom,first_name,Prenom,FirstName" placeholder="Jane">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">LAST NAME</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="nom,last_name,Nom,LastName" placeholder="Doe">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">BIRTH NAME</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="nom_naissance,birth_name,maiden_name" placeholder="Maiden name">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">DISPLAY NAME</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="display_name,pseudo,screen_name" placeholder="janedoe">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">USERNAME</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="username,login,user" placeholder="jdoe92">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">GENDER</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="gender,sexe,sex" placeholder="F / M">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Tab -->
+                <div class="tab-panel" id="panel-contact">
+                    <div class="form-grid">
+                        <div class="field-group">
+                            <label class="field-label">EMAIL</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="email,Email,mail" placeholder="user@example.com">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">PHONE</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="telephone,Telephone,phone,Phone,tel,mobile" placeholder="+1 555 123 4567">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address Tab -->
+                <div class="tab-panel" id="panel-address">
+                    <div class="form-grid">
+                        <div class="field-group">
+                            <label class="field-label">CITY</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="ville,city,commune" placeholder="New York">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">STATE</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="state,region,departement" placeholder="NY">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">ZIP CODE</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="cp,code_postal,postal_code,zip" placeholder="10001">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">COUNTRY</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="pays,country,Country" placeholder="US">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Birth Tab -->
+                <div class="tab-panel" id="panel-birth">
+                    <div class="form-grid">
+                        <div class="field-group">
+                            <label class="field-label">DATE OF BIRTH</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="birthdate,date_naissance,dob,naissance" placeholder="1992-05-14">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">AGE</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="age" placeholder="32">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial Tab -->
+                <div class="tab-panel" id="panel-financial">
+                    <div class="form-grid">
+                        <div class="field-group">
+                            <label class="field-label">CREDIT CARD (LAST 4)</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="cc,credit_card,cc_last4,card" placeholder="4821">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">BANK NAME</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="bank,bank_name,banque" placeholder="Chase">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Credentials Tab -->
+                <div class="tab-panel" id="panel-credentials">
+                    <div class="form-grid">
+                        <div class="field-group">
+                            <label class="field-label">PASSWORD</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="password,pass,mdp" placeholder="password123">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">HASH</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="hash,password_hash,pwd_hash" placeholder="5f4dcc3b5aa765d61...">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Identifiers Tab -->
+                <div class="tab-panel" id="panel-identifiers">
+                    <div class="form-grid">
+                        <div class="field-group">
+                            <label class="field-label">IP ADDRESS</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="ip,ip_address" placeholder="192.168.1.1">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">SSN (LAST 4)</label>
+                            <div class="field-row">
+                                <input type="text" class="field-input" data-json-keys="ssn,social_security,numero_securite_sociale" placeholder="1234">
+                                <button class="cond-btn" data-value="exact">EXACT <i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Match Options Panel (shared) -->
+                <div class="match-panel" id="matchPanel">
+                    <div class="match-panel-header">MATCH OPTIONS</div>
+                    <div class="match-section-label">MATCH TYPE</div>
+                    <div class="match-types">
+                        <button class="match-type-btn active" data-val="contains">Contains</button>
+                        <button class="match-type-btn" data-val="exact">Exact match</button>
+                        <button class="match-type-btn" data-val="starts">Starts with</button>
+                        <button class="match-type-btn" data-val="ends">Ends with</button>
+                        <button class="match-type-btn" data-val="regex">Regex</button>
+                    </div>
+                    <div class="match-divider"></div>
+                    <label class="match-option">
+                        <input type="checkbox" class="match-checkbox" data-opt="wildcard">
+                        <span class="match-option-text">
+                            <strong>Wildcard mode</strong>
+                            <small>Allow * and ? in the value.</small>
+                        </span>
+                    </label>
+                    <label class="match-option">
+                        <input type="checkbox" class="match-checkbox" data-opt="case">
+                        <span class="match-option-text">
+                            <strong>Case sensitive</strong>
+                        </span>
+                    </label>
+                    <label class="match-option">
+                        <input type="checkbox" class="match-checkbox" data-opt="fuzzy">
+                        <span class="match-option-text">
+                            <strong>Fuzzy match</strong>
+                            <small>Tolerate typos via AUTO fuzziness.</small>
+                        </span>
+                    </label>
+                </div>
+
+                <!-- Actions -->
+                <div class="form-actions">
+                    <button class="clear-btn" id="clearAllBtn">
+                        <i class="fas fa-rotate-left"></i> Clear all
+                    </button>
+                    <button class="search-submit-btn" id="searchBtn">
+                        Search <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Area -->
+            <div class="results-area" id="resultsArea">
+                <div class="results-empty">
+                    <i class="fas fa-magnifying-glass-chart"></i>
+                    <h3>Ready to search</h3>
+                    <p>Fill at least one field above, then hit <strong>Search</strong>.<br>Combine multiple fields with AND &mdash; every record must match all of them.</p>
+                </div>
+            </div>
+
+            <!-- Toast Container -->
+            <div class="toast-container" id="toastContainer"></div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script type="module">
+        import { logoutUser } from "./auth.js";
+        const navUser = document.getElementById('navUser');
+        const userPopup = document.getElementById('userPopup');
+        if (navUser && userPopup) {
+            navUser.addEventListener('click', (e) => {
+                if (e.target.closest('.user-popup')) return;
+                e.stopPropagation();
+                navUser.classList.toggle('open');
+                userPopup.classList.toggle('open');
+            });
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.nav-user')) {
+                    userPopup.classList.remove('open');
+                    navUser.classList.remove('open');
+                }
+            });
+        }
+        document.getElementById('logoutBtn').addEventListener('click', logoutUser);
+    </script>
+</body>
+</html>
